@@ -1,11 +1,13 @@
 package pl.nikowis.engineTester;
 
 import org.lwjgl.opengl.Display;
+import pl.nikowis.models.RawModel;
+import pl.nikowis.models.TexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
-import pl.nikowis.renderEngine.RawModel;
 import pl.nikowis.renderEngine.Renderer;
 import pl.nikowis.shaders.StaticShader;
+import pl.nikowis.textures.ModelTexture;
 
 /**
  * Created by Nikodem on 12/22/2016.
@@ -17,7 +19,7 @@ public class MainGameLoop {
 
         Loader loader = new Loader();
         Renderer renderer = new Renderer();
-        StaticShader shader= new StaticShader();
+        StaticShader shader = new StaticShader();
 
         float[] vertices = {
                 -0.5f, 0.5f, 0f,
@@ -31,12 +33,23 @@ public class MainGameLoop {
                 3, 1, 2
         };
 
-        RawModel model = loader.loadtoVAO(vertices, indices);
+        float[] textureCoords = {
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0
+        };
+
+
+        RawModel model = loader.loadtoVAO(vertices,textureCoords, indices);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("texture"));
+        TexturedModel texturedModel = new TexturedModel(model, texture);
+
 
         while (!Display.isCloseRequested()) {
             renderer.prepare();
             shader.start();
-            renderer.render(model);
+            renderer.render(texturedModel);
             shader.stop();
             DisplayManager.updateDisplay();
         }

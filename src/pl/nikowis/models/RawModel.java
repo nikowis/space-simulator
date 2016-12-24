@@ -1,4 +1,4 @@
-package pl.nikowis.renderEngine;
+package pl.nikowis.models;
 
 /**
  * Created by Nikodem on 12/22/2016.
