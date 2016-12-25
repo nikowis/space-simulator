@@ -24,7 +24,7 @@ public class StaticShader extends ShaderProgram {
     protected void getAllUniformLocations() {
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-        location_projectionMatrix = super.getUniformLocation("viewMatrix");
+        location_viewMatrix = super.getUniformLocation("viewMatrix");
     }
 
     public void loadProjectionMatrix(Matrix4f projection) {

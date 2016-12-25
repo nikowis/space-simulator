@@ -8,6 +8,8 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Camera {
 
+    private static final float MOVE_STEP = 0.05f;
+
     private Vector3f position = new Vector3f(0, 0, 0);
     //how high the camera is
     private float pitch;
@@ -20,25 +22,24 @@ public class Camera {
     }
 
     public void move() {
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            position.y -= 0.02f;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            position.y += 0.02f;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-            position.z -= 0.02f;
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-            position.z += 0.02f;
-        }
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            position.x -= 0.02f;
+            position.x -= MOVE_STEP;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            position.x += 0.02f;
+            position.x += MOVE_STEP;
         }
-
+        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+            position.y -= MOVE_STEP;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            position.y += MOVE_STEP;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+            position.z -= MOVE_STEP * 2;
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+            position.z += MOVE_STEP * 2;
+        }
     }
 
     public Vector3f getPosition() {
