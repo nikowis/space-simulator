@@ -92,18 +92,18 @@ public class OBJLoader {
             verticesArray[vertexPointer++] = vertex.z;
         }
 
-        for(int i=0;i< indices.size();i++) {
+        for (int i = 0; i < indices.size(); i++) {
             indicesArray[i] = indices.get(i);
         }
 
-        return loader.loadtoVAO(verticesArray, textureArray, indicesArray);
+        return loader.loadtoVAO(verticesArray, textureArray, normalsArray, indicesArray);
     }
 
     private static void processVertex(String[] vertexData, List<Integer> indices
             , List<Vector2f> textures, List<Vector3f> normals
             , float[] textureArray, float[] normalsArray) {
 
-        int currentVertexPointer = Integer.parseInt(vertexData[0])-1;
+        int currentVertexPointer = Integer.parseInt(vertexData[0]) - 1;
         indices.add(currentVertexPointer);
         Vector2f currentTex = textures.get(Integer.parseInt(vertexData[1]) - 1);
         textureArray[currentVertexPointer * 2] = currentTex.x;

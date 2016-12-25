@@ -4,6 +4,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.entities.Camera;
 import pl.nikowis.entities.Entity;
+import pl.nikowis.entities.Light;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.models.TexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
@@ -31,14 +32,16 @@ public class MainGameLoop {
 
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
 
-        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
+        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -25), 0, 0, 0, 1);
         Camera camera = new Camera();
+        Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
 
         while (!Display.isCloseRequested()) {
             entity.increaseRotation(0, 1, 0);
             camera.move();
             renderer.prepare();
             shader.start();
+            shader.loadLight(light);
             shader.loadViewMatrix(camera);
             renderer.render(entity, shader);
             shader.stop();
