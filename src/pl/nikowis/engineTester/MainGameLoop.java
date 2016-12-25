@@ -8,6 +8,7 @@ import pl.nikowis.models.RawModel;
 import pl.nikowis.models.TexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
+import pl.nikowis.renderEngine.OBJLoader;
 import pl.nikowis.renderEngine.Renderer;
 import pl.nikowis.shaders.StaticShader;
 import pl.nikowis.textures.ModelTexture;
@@ -25,35 +26,16 @@ public class MainGameLoop {
         StaticShader shader = new StaticShader();
         Renderer renderer = new Renderer(shader);
 
-        float[] vertices = {
-                -0.5f, 0.5f, 0f,
-                -0.5f, -0.5f, 0f,
-                0.5f, -0.5f, 0f,
-                0.5f, 0.5f, 0f,
-        };
 
-        int[] indices = {
-                0, 1, 3,
-                3, 1, 2
-        };
+        RawModel model = OBJLoader.loadObjModel("stall", loader);
 
-        float[] textureCoords = {
-                0, 0,
-                0, 1,
-                1, 1,
-                1, 0
-        };
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
 
-
-        RawModel model = loader.loadtoVAO(vertices, textureCoords, indices);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("texture"));
-        TexturedModel staticModel = new TexturedModel(model, texture);
-
-        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -1), 0, 0, 0, 1);
+        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
         Camera camera = new Camera();
 
         while (!Display.isCloseRequested()) {
-            entity.increasePosition(0, 0, -0.2f);
+            entity.increaseRotation(0, 1, 0);
             camera.move();
             renderer.prepare();
             shader.start();
