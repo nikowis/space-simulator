@@ -1,6 +1,9 @@
 package pl.nikowis.engineTester;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
+import pl.nikowis.entities.Camera;
+import pl.nikowis.entities.Entity;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.models.TexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
@@ -18,8 +21,9 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
-        Renderer renderer = new Renderer();
+
         StaticShader shader = new StaticShader();
+        Renderer renderer = new Renderer(shader);
 
         float[] vertices = {
                 -0.5f, 0.5f, 0f,
@@ -41,15 +45,20 @@ public class MainGameLoop {
         };
 
 
-        RawModel model = loader.loadtoVAO(vertices,textureCoords, indices);
+        RawModel model = loader.loadtoVAO(vertices, textureCoords, indices);
         ModelTexture texture = new ModelTexture(loader.loadTexture("texture"));
-        TexturedModel texturedModel = new TexturedModel(model, texture);
+        TexturedModel staticModel = new TexturedModel(model, texture);
 
+        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -1), 0, 0, 0, 1);
+        Camera camera = new Camera();
 
         while (!Display.isCloseRequested()) {
+            entity.increasePosition(0, 0, -0.2f);
+            camera.move();
             renderer.prepare();
             shader.start();
-            renderer.render(texturedModel);
+            shader.loadViewMatrix(camera);
+            renderer.render(entity, shader);
             shader.stop();
             DisplayManager.updateDisplay();
         }
