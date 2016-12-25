@@ -9,9 +9,8 @@ import pl.nikowis.models.RawModel;
 import pl.nikowis.models.TexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
+import pl.nikowis.renderEngine.MasterRenderer;
 import pl.nikowis.renderEngine.OBJLoader;
-import pl.nikowis.renderEngine.Renderer;
-import pl.nikowis.shaders.StaticShader;
 import pl.nikowis.textures.ModelTexture;
 
 /**
@@ -24,10 +23,6 @@ public class MainGameLoop {
 
         Loader loader = new Loader();
 
-        StaticShader shader = new StaticShader();
-        Renderer renderer = new Renderer(shader);
-
-
         RawModel model = OBJLoader.loadObjModel("stall", loader);
 
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
@@ -38,19 +33,18 @@ public class MainGameLoop {
         Camera camera = new Camera();
         Light light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
 
+        MasterRenderer renderer = new MasterRenderer();
+
         while (!Display.isCloseRequested()) {
-            entity.increaseRotation(0, 1, 0);
             camera.move();
-            renderer.prepare();
-            shader.start();
-            shader.loadLight(light);
-            shader.loadViewMatrix(camera);
-            renderer.render(entity, shader);
-            shader.stop();
+            entity.increaseRotation(0, 0.5f, 0);
+            renderer.processEntity(entity);
+
+            renderer.render(light, camera);
             DisplayManager.updateDisplay();
         }
 
-        shader.cleanUp();
+        renderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
     }
