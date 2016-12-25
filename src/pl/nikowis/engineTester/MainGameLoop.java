@@ -31,10 +31,12 @@ public class MainGameLoop {
         RawModel model = OBJLoader.loadObjModel("stall", loader);
 
         TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
-
-        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -25), 0, 0, 0, 1);
+        ModelTexture texture = staticModel.getTexture();
+        texture.setShineDamper(100);
+        texture.setReflectivity(1);
+        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -40), 0, 0, 0, 1);
         Camera camera = new Camera();
-        Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
+        Light light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
 
         while (!Display.isCloseRequested()) {
             entity.increaseRotation(0, 1, 0);

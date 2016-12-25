@@ -10,6 +10,7 @@ import pl.nikowis.entities.Entity;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.models.TexturedModel;
 import pl.nikowis.shaders.StaticShader;
+import pl.nikowis.textures.ModelTexture;
 import pl.nikowis.toolbox.Maths;
 
 /**
@@ -48,9 +49,10 @@ public class Renderer {
                 entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale()
         );
         shader.loadTransformationMatrix(transformationMatrix);
-
+        ModelTexture texture = texturedModel.getTexture();
+        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getID());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
         GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
