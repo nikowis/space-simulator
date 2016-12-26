@@ -3,6 +3,8 @@ package pl.nikowis.terrains;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.renderEngine.Loader;
 import pl.nikowis.textures.ModelTexture;
+import pl.nikowis.textures.TerrainTexture;
+import pl.nikowis.textures.TerrainTexturePack;
 
 /**
  * Created by Nikodem on 12/25/2016.
@@ -14,10 +16,14 @@ public class Terrain {
     private float x;
     private float z;
     private RawModel model;
-    private ModelTexture texture;
+    private TerrainTexturePack terrainTexturePack;
+    private TerrainTexture blendMap;
 
-    public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture) {
-        this.texture = texture;
+
+
+    public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack terrainTexturePack, TerrainTexture blendMap) {
+        this.terrainTexturePack = terrainTexturePack;
+        this.blendMap = blendMap;
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
         this.model = generateTerrain(loader);
@@ -35,8 +41,12 @@ public class Terrain {
         return model;
     }
 
-    public ModelTexture getTexture() {
-        return texture;
+    public TerrainTexturePack getTerrainTexturePack() {
+        return terrainTexturePack;
+    }
+
+    public TerrainTexture getBlendMap() {
+        return blendMap;
     }
 
     private RawModel generateTerrain(Loader loader){
