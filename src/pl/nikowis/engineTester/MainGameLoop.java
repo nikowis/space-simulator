@@ -11,7 +11,12 @@ import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
 import pl.nikowis.renderEngine.MasterRenderer;
 import pl.nikowis.renderEngine.OBJLoader;
+import pl.nikowis.terrains.Terrain;
 import pl.nikowis.textures.ModelTexture;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Nikodem on 12/22/2016.
@@ -19,26 +24,39 @@ import pl.nikowis.textures.ModelTexture;
 public class MainGameLoop {
 
     public static void main(String[] args) {
-        DisplayManager.createDisplay();
 
+        DisplayManager.createDisplay();
         Loader loader = new Loader();
 
-        RawModel model = OBJLoader.loadObjModel("stall", loader);
+        RawModel model = OBJLoader.loadObjModel("tree", loader);
 
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
+
+        List<Entity> entities = new ArrayList<Entity>();
+        Random random = new Random();
+        for (int i = 0; i < 500; i++) {
+            entities.add(new Entity(staticModel, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * -600), 0, 0, 0, 3));
+        }
+
+        Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
+
+        Terrain terrain = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain2 = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+
+        Camera camera = new Camera();
+        MasterRenderer renderer = new MasterRenderer();
+
         ModelTexture texture = staticModel.getTexture();
         texture.setShineDamper(100);
         texture.setReflectivity(1);
-        Entity entity = new Entity(staticModel, new Vector3f(0, 0, -40), 0, 0, 0, 1);
-        Camera camera = new Camera();
-        Light light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
-
-        MasterRenderer renderer = new MasterRenderer();
 
         while (!Display.isCloseRequested()) {
             camera.move();
-            entity.increaseRotation(0, 0.5f, 0);
-            renderer.processEntity(entity);
+            renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain2);
+            for(Entity entity:entities){
+                renderer.processEntity(entity);
+            }
 
             renderer.render(light, camera);
             DisplayManager.updateDisplay();
