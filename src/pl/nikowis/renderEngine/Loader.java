@@ -36,6 +36,11 @@ public class Loader {
         return new RawModel(vaoID, indices.length);
     }
 
+    /**
+     * Loads a texture png file.
+     * @param fileName texture file name ( without .png )
+     * @return texture id
+     */
     public int loadTexture(String fileName) {
         Texture texture = null;
         try {

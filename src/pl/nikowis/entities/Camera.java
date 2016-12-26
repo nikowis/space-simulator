@@ -10,7 +10,7 @@ public class Camera {
 
     private static final float MOVE_STEP = 0.05f;
 
-    private Vector3f position = new Vector3f(0, 5, 0);
+    private Vector3f position = new Vector3f(0, 15, 0);
     //how high the camera is
     private float pitch=10;
     //how right or left the camera is
