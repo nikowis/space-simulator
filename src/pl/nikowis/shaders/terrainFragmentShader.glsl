@@ -1,8 +1,10 @@
 #version 400 core
 
+const int lightsCount = 10;
+
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4];
+in vec3 toLightVector[lightsCount];
 in vec3 toCameraVector;
 
 out vec4 out_Color;
@@ -12,9 +14,8 @@ uniform sampler2D rTexture;
 uniform sampler2D gTexture;
 uniform sampler2D bTexture;
 uniform sampler2D blendMap;
-
-uniform vec3 attenuation[4];
-uniform vec3 lightColour[4];
+uniform vec3 attenuation[lightsCount];
+uniform vec3 lightColour[lightsCount];
 uniform float shineDamper;
 uniform float reflectivty;
 
@@ -34,7 +35,7 @@ void main(void){
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitVectorToCamera = normalize(toCameraVector);
 
-    for(int i=0;i<4;i++) {
+    for(int i=0;i<lightsCount;i++) {
         float distance = length(toLightVector[i]);
         float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance *distance);
 

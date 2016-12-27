@@ -21,10 +21,10 @@ public class Camera {
     //how much the camera is tilted
     private float roll;
 
-    private Player player;
+    private MovingEntity movingEntity;
 
-    public Camera(Player player) {
-        this.player = player;
+    public Camera(MovingEntity movingEntity) {
+        this.movingEntity = movingEntity;
     }
 
     public Camera() {
@@ -56,13 +56,13 @@ public class Camera {
     }
 
     private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
-        float theta = player.getRotY() + angleAroundPlayer;
+        float theta = movingEntity.getRotY() + angleAroundPlayer;
         float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
-        position.x = player.getPosition().x - offsetX;
-        position.z = player.getPosition().z - offsetZ;
-        position.y = player.getPosition().y + verticalDistance;
-        this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+        position.x = movingEntity.getPosition().x - offsetX;
+        position.z = movingEntity.getPosition().z - offsetZ;
+        position.y = movingEntity.getPosition().y + verticalDistance;
+        this.yaw = 180 - (movingEntity.getRotY() + angleAroundPlayer);
 
     }
 

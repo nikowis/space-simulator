@@ -16,6 +16,9 @@ import java.nio.FloatBuffer;
  */
 public abstract class ShaderProgram {
 
+    //can crash when too many
+    public static final int MAX_LIGHTS = 10;
+
     private int programId;
     private int vertexShaderID;
     private int fragmentShaderID;

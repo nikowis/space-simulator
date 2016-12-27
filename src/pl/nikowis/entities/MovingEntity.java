@@ -3,14 +3,15 @@ package pl.nikowis.entities;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.models.TexturedModel;
+import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.terrains.Terrain;
 
 /**
  * Created by Nikodem on 12/27/2016.
  */
-public abstract class MovingEntity extends Entity {
+public class MovingEntity extends Entity {
 
-    protected float move_speed = 100;
+    protected float move_speed = 500;
     protected float turn_speed = 160;
     protected float jump_power = 30;
     protected static final float GRAVITY = -100;
@@ -26,20 +27,31 @@ public abstract class MovingEntity extends Entity {
         super(model, position, rotX, rotY, rotZ, scale);
     }
 
-    protected abstract void performMove();
-
     public void move() {
         checkInputs();
         performMove();
         checkTerrainBounds();
     }
 
-    public void jump() {
+    private void performMove() {
+        super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
+        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
+        super.increasePosition(dx, 0, dz);
+        upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+        super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        if (super.getPosition().y < TERRAIN_HEIGHT) {
+            upwardsSpeed = 0;
+            isInAir = false;
+            super.getPosition().y = TERRAIN_HEIGHT;
+        }
+    }
+
+    private void jump() {
         isInAir = true;
         this.upwardsSpeed = jump_power;
     }
-
-    ;
 
     protected void checkInputs() {
         if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {

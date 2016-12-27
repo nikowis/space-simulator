@@ -8,10 +8,11 @@ import pl.nikowis.models.TexturedModel;
  */
 public class Entity {
 
-    private TexturedModel model;
-    private Vector3f position;
-    private float rotX, rotY, rotZ;
-    private float scale;
+    protected TexturedModel model;
+    protected Vector3f position;
+    protected float rotX, rotY, rotZ;
+    protected float scale;
+    protected Light light;
 
     public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         this.model = model;
@@ -20,6 +21,20 @@ public class Entity {
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
+        light = null;
+    }
+
+    public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Light light, float lightYDiff) {
+        this.model = model;
+        this.position = position;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.scale = scale;
+        this.light = light;
+        light.getPosition().x = position.getX();
+        light.getPosition().y = position.getY() + lightYDiff;
+        light.getPosition().z = position.getZ();
     }
 
     public void increasePosition(float dx, float dy, float dz) {
@@ -80,5 +95,9 @@ public class Entity {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public Light getLight() {
+        return light;
     }
 }
