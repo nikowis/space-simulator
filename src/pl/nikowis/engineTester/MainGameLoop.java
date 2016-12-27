@@ -31,6 +31,10 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
 
+        RawModel rawLampModel = OBJLoader.loadObjModel("lamp", loader);
+        TexturedModel staticLampModel = new TexturedModel(rawLampModel, new ModelTexture(loader.loadTexture("lamp")));
+
+
         RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
         TexturedModel staticTreeModel = new TexturedModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")));
 
@@ -43,14 +47,18 @@ public class MainGameLoop {
             entities.add(new Entity(staticTreeModel, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * -600), 0, 0, 0, 3));
         }
 
+        entities.add(new Entity(staticLampModel, new Vector3f(-100, 0, -40), 0, 0, 0, 1));
+        entities.add(new Entity(staticLampModel, new Vector3f(0, 0, -40), 0, 0, 0, 1));
+        entities.add(new Entity(staticLampModel, new Vector3f(100, 0, -40), 0, 0, 0, 1));
 
         Player player = new Player(staticPersonModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
 
-        Light sunLight = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
+        Light sunLight = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
         List<Light> lights = new ArrayList<>();
         lights.add(sunLight);
-        lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
-        lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
+        lights.add(new Light(new Vector3f(-100, 4, -40), new Vector3f(5, 0, 0), new Vector3f(1, 0.01f, 0.02f)));
+        lights.add(new Light(new Vector3f(0, 4, -40), new Vector3f(5, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+        lights.add(new Light(new Vector3f(100, 4, -40), new Vector3f(5, 0, 0), new Vector3f(1, 0.01f, 0.02f)));
 
         //####################################################################
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
