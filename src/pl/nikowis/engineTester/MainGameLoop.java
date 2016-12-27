@@ -46,8 +46,11 @@ public class MainGameLoop {
 
         Player player = new Player(staticPersonModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
 
-        Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
-
+        Light sunLight = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
+        List<Light> lights = new ArrayList<>();
+        lights.add(sunLight);
+        lights.add(new Light(new Vector3f(-200, 10, -200), new Vector3f(10, 0, 0)));
+        lights.add(new Light(new Vector3f(200, 10, 200), new Vector3f(0, 0, 10)));
 
         //####################################################################
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
@@ -80,7 +83,7 @@ public class MainGameLoop {
                 renderer.processEntity(entity);
             }
 
-            renderer.render(light, camera);
+            renderer.render(lights, camera);
             DisplayManager.updateDisplay();
         }
 
