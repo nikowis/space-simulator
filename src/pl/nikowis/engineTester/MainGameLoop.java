@@ -44,7 +44,7 @@ public class MainGameLoop {
         TexturedModel staticPersonModel = new TexturedModel(rawPersonModel, new ModelTexture(loader.loadTexture("playerTexture")));
 
         List<Entity> entities = new ArrayList<Entity>();
-        createTreesInTheMiddle(staticTreeModel, entities);
+
         createTreeOutline(staticTreeModel, entities);
 
 
@@ -66,7 +66,6 @@ public class MainGameLoop {
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
-
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap2"));
 
@@ -86,7 +85,6 @@ public class MainGameLoop {
             player.move();
             renderer.processEntity(player);
             renderer.processTerrain(terrain);
-            //renderer.processTerrain(terrain2);
             for (Entity entity : entities) {
                 renderer.processEntity(entity);
             }
