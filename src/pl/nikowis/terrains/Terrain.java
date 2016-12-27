@@ -10,7 +10,7 @@ import pl.nikowis.textures.TerrainTexturePack;
  * Created by Nikodem on 12/25/2016.
  */
 public class Terrain {
-    private static final float SIZE = 800;
+    public static final float SIZE = 800;
     private static final int VERTEX_COUNT = 128;
 
     private float x;
@@ -18,8 +18,6 @@ public class Terrain {
     private RawModel model;
     private TerrainTexturePack terrainTexturePack;
     private TerrainTexture blendMap;
-
-
 
     public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack terrainTexturePack, TerrainTexture blendMap) {
         this.terrainTexturePack = terrainTexturePack;

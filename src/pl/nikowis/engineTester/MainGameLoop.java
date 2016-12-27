@@ -26,6 +26,8 @@ import java.util.Random;
  */
 public class MainGameLoop {
 
+    public static final int TREE_OUTLINE_STEP = 5;
+
     public static void main(String[] args) {
 
         DisplayManager.createDisplay();
@@ -42,16 +44,15 @@ public class MainGameLoop {
         TexturedModel staticPersonModel = new TexturedModel(rawPersonModel, new ModelTexture(loader.loadTexture("playerTexture")));
 
         List<Entity> entities = new ArrayList<Entity>();
-        Random random = new Random();
-        for (int i = 0; i < 500; i++) {
-            entities.add(new Entity(staticTreeModel, new Vector3f(random.nextFloat() * 800 - 400, 0, random.nextFloat() * -600), 0, 0, 0, 3));
-        }
+        createTreesInTheMiddle(staticTreeModel, entities);
+        createTreeOutline(staticTreeModel, entities);
+
 
         entities.add(new Entity(staticLampModel, new Vector3f(-100, 0, -40), 0, 0, 0, 1));
         entities.add(new Entity(staticLampModel, new Vector3f(0, 0, -40), 0, 0, 0, 1));
         entities.add(new Entity(staticLampModel, new Vector3f(100, 0, -40), 0, 0, 0, 1));
 
-        Player player = new Player(staticPersonModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
+        Player player = new Player(staticPersonModel, new Vector3f(240, 0, 450), 0, 0, 0, 0.7f);
 
         Light sunLight = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
         List<Light> lights = new ArrayList<>();
@@ -67,12 +68,11 @@ public class MainGameLoop {
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap2"));
 
         //####################################################################
 
-        Terrain terrain = new Terrain(-1, -1, loader, texturePack, blendMap);
-        Terrain terrain2 = new Terrain(0, -1, loader, texturePack, blendMap);
+        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 
         Camera camera = new Camera(player);
         MasterRenderer renderer = new MasterRenderer();
@@ -86,7 +86,7 @@ public class MainGameLoop {
             player.move();
             renderer.processEntity(player);
             renderer.processTerrain(terrain);
-            renderer.processTerrain(terrain2);
+            //renderer.processTerrain(terrain2);
             for (Entity entity : entities) {
                 renderer.processEntity(entity);
             }
@@ -98,5 +98,29 @@ public class MainGameLoop {
         renderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
+    }
+
+    private static void createTreeOutline(TexturedModel staticTreeModel, List<Entity> entities) {
+        for (int i = 0; i < Terrain.SIZE; i += TREE_OUTLINE_STEP) {
+            entities.add(new Entity(staticTreeModel, new Vector3f(0, 0, i), 0, 0, 0, 7));
+        }
+        for (int i = 0; i < Terrain.SIZE; i += TREE_OUTLINE_STEP) {
+            entities.add(new Entity(staticTreeModel, new Vector3f(i, 0, 0), 0, 0, 0, 7));
+        }
+        for (int i = 0; i < Terrain.SIZE; i += TREE_OUTLINE_STEP) {
+            entities.add(new Entity(staticTreeModel, new Vector3f(Terrain.SIZE, 0, i), 0, 0, 0, 7));
+        }
+        for (int i = 0; i < Terrain.SIZE; i += TREE_OUTLINE_STEP) {
+            entities.add(new Entity(staticTreeModel, new Vector3f(i, 0, Terrain.SIZE), 0, 0, 0, 7));
+        }
+    }
+
+    private static void createTreesInTheMiddle(TexturedModel staticTreeModel, List<Entity> entities) {
+        Random random = new Random();
+        for (int i = 0; i < 500; i++) {
+            int xCoord = 230 + random.nextInt(450);
+            int zCoord = 490 + random.nextInt((int) (Terrain.SIZE / 4));
+            entities.add(new Entity(staticTreeModel, new Vector3f(xCoord, 0, zCoord), 0, 0, 0, 7));
+        }
     }
 }
