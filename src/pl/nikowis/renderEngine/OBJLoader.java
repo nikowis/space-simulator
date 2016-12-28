@@ -12,9 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Loader for obj files.
  * Created by Nikodem on 12/25/2016.
  */
 public class OBJLoader {
+    /**
+     * Reads the obj file and extracts all the data into a {@link RawModel}.
+     * @param fileName name of the obj file ( without the extension ).
+     * @param loader loader class instance
+     * @return {@link RawModel} model
+     */
     public static RawModel loadObjModel(String fileName, Loader loader) {
         FileReader fr = null;
         try {

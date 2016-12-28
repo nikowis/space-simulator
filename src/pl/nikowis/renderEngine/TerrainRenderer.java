@@ -16,20 +16,30 @@ import pl.nikowis.toolbox.Maths;
 import java.util.List;
 
 /**
+ * Renderer for terrain.
  * Created by Nikodem on 12/26/2016.
  */
 public class TerrainRenderer {
 
     private TerrainShader shader;
 
-    public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix4f) {
+    /**
+     * Constructor.
+     * @param shader static shader
+     * @param projectionMatrix projection matrix
+     */
+    public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
         shader.start();
-        shader.loadProjectionMatrix(projectionMatrix4f);
+        shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextureUnits();
         shader.stop();
     }
 
+    /**
+     * Renders each of the given terrains.
+     * @param terrains list of terrains to render.
+     */
     public void render(List<Terrain> terrains) {
         for (Terrain terrain : terrains) {
             prepareTerrain(terrain);

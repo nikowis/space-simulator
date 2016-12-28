@@ -67,17 +67,16 @@ public class MainGameLoop {
         ModelTexture texture = staticTreeModel.getTexture();
         texture.setShineDamper(100);
         texture.setReflectivity(1);
-        
+
+        renderer.processEntity(player);
+        renderer.processTerrain(terrain);
+        for (Entity entity : entities) {
+            renderer.processEntity(entity);
+        }
+
         while (!Display.isCloseRequested()) {
             camera.move();
             player.move();
-            System.err.println("[" + (int) player.getPosition().x + "," + (int) player.getPosition().z + "]");
-            renderer.processEntity(player);
-            renderer.processTerrain(terrain);
-            for (Entity entity : entities) {
-                renderer.processEntity(entity);
-            }
-
             renderer.render(lights, camera);
             DisplayManager.updateDisplay();
         }

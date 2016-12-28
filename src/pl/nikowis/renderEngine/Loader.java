@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class resposnible for manupulating VAO's and VBO's with OpenGL.
  * Created by Nikodem on 12/22/2016.
  */
 public class Loader {
@@ -25,6 +26,14 @@ public class Loader {
     private List<Integer> vbos = new ArrayList<>();
     private List<Integer> textures = new ArrayList<>();
 
+    /**
+     * Loads specified data to the memory as a VAO.
+     * @param positions vertices
+     * @param textureCoords texture coordinates
+     * @param normals normals
+     * @param indices indices
+     * @return
+     */
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
         int vaoID = createVAO();
         binIndicesBuffer(indices);
@@ -37,7 +46,7 @@ public class Loader {
     }
 
     /**
-     * Loads a texture png file.
+     * Loads a texture png file, and binds it in OpenGL.
      * @param fileName texture file name ( without .png )
      * @return texture id
      */
@@ -75,6 +84,9 @@ public class Loader {
         GL30.glBindVertexArray(0);
     }
 
+    /**
+     * Clears all initialized VAO's, VBO's and textures.
+     */
     public void cleanUp() {
         for (int vao : vaos) {
             GL30.glDeleteVertexArrays(vao);

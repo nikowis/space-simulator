@@ -9,6 +9,9 @@ import pl.nikowis.toolbox.Maths;
 import java.util.List;
 
 /**
+ * Implementation of {@link ShaderProgram}.
+ * Used to manipulate uniform variables.
+ * Shader for any object but terrain.
  * Created by Nikodem on 12/24/2016.
  */
 public class StaticShader extends ShaderProgram {
@@ -60,6 +63,11 @@ public class StaticShader extends ShaderProgram {
         super.loadMatrix(location_viewMatrix, viewMatrix);
     }
 
+    /**
+     * Loads the lights to the memory.
+     *
+     * @param lights list of lights with position, colour and attenuation(optional).
+     */
     public void loadLights(List<Light> lights) {
         for (int i = 0; i < MAX_LIGHTS; i++) {
             if (i < lights.size()) {

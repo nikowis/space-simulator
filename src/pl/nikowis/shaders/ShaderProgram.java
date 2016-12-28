@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 /**
+ * Abstract class to manipulate uniform variables and load glsl shaders.
  * Created by Nikodem on 12/24/2016.
  */
 public abstract class ShaderProgram {
@@ -25,6 +26,11 @@ public abstract class ShaderProgram {
 
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
+    /**
+     * Constructor
+     * @param vertexFile vertex shader in glsl
+     * @param fragmentFile fragment shader in glsl
+     */
     public ShaderProgram(String vertexFile, String fragmentFile) {
         vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
         fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
@@ -51,6 +57,9 @@ public abstract class ShaderProgram {
         GL20.glUseProgram(0);
     }
 
+    /**
+     * Cleans up the program, vextex shader and the fragment shader.
+     */
     public void cleanUp() {
         stop();
         GL20.glDetachShader(programId, vertexShaderID);

@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Renderering class that optimizes and enables rendering of the same TexturedModel
- * multiple times.
+ * Rendering class(controls entities and terrain rendering).
  * Created by Nikodem on 12/25/2016.
  */
 public class MasterRenderer {
@@ -28,7 +27,8 @@ public class MasterRenderer {
     private static final float FAR_PLANE = 1500;
 
     private Matrix4f projectionMatrix;
-    private StaticShader shader= new StaticShader();;
+    private StaticShader shader = new StaticShader();
+
     private EntityRenderer entityRenderer;
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
@@ -44,6 +44,12 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
     }
 
+    /**
+     * Renders all processed entities in each frame.
+     *
+     * @param lights lights to factor in
+     * @param camera camera which watches the scene
+     */
     public void render(List<Light> lights, Camera camera) {
         prepare();
         shader.start();
@@ -56,14 +62,22 @@ public class MasterRenderer {
         terrainShader.loadViewMatrix(camera);
         terrainRenderer.render(terrains);
         terrainShader.stop();
-        terrains.clear();
-        entities.clear();
     }
 
+    /**
+     * Adds a terrain to render.
+     *
+     * @param terrain terrain to process
+     */
     public void processTerrain(Terrain terrain) {
         terrains.add(terrain);
     }
 
+    /**
+     * Adds an entity to render.
+     *
+     * @param entity entity to process
+     */
     public void processEntity(Entity entity) {
         TexturedModel entityModel = entity.getModel();
         List<Entity> batch = entities.get(entityModel);
@@ -76,13 +90,16 @@ public class MasterRenderer {
         }
     }
 
+    /**
+     * Cleans up internals.
+     */
     public void cleanUp() {
         shader.cleanUp();
         terrainShader.cleanUp();
     }
 
 
-    public void prepare() {
+    private void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(0.8f, 1, 1, 1);

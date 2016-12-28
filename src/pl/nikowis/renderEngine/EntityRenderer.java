@@ -17,12 +17,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Renderer for entities. This class optimizes and enables rendering of the
+ * same TexturedModel multiple times.
  * Created by Nikodem on 12/23/2016.
  */
 public class EntityRenderer {
 
     private StaticShader shader;
 
+    /**
+     * Constructor.
+     * @param shader static shader
+     * @param projectionMatrix projection matrix
+     */
     public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
 
@@ -31,7 +38,10 @@ public class EntityRenderer {
         shader.start();
     }
 
-
+    /**
+     * Renders all the entities with associated texturedModels.
+     * @param entities map of textured models and entities.
+     */
     public void render(Map<TexturedModel, List<Entity>> entities) {
         for(TexturedModel model : entities.keySet()) {
             prepareTexutredModel(model);
