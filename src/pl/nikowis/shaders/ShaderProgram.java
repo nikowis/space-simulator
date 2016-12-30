@@ -106,7 +106,7 @@ public abstract class ShaderProgram {
     }
 
     /**
-     * Cleans up the program, vextex shader and the fragment shader.
+     * Cleans up the program, vertex shader and the fragment shader.
      */
     public void cleanUp() {
         stop();

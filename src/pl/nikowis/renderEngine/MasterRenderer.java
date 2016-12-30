@@ -30,6 +30,8 @@ public class MasterRenderer {
      * Controls rendering mode ( naked or textured ).
      */
     private boolean nakedMode = false;
+    private boolean phongShadingModel = true;
+    private boolean gouraudShadingModel = false;
 
     private Matrix4f projectionMatrix;
 
@@ -51,6 +53,7 @@ public class MasterRenderer {
         entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
+        nonFlatShader.loadPhongGouardShading(true, false);
     }
 
     /**
@@ -76,6 +79,7 @@ public class MasterRenderer {
             nakedRenderer.getShader().start();
             nakedRenderer.getShader().loadLights(lights);
             nakedRenderer.getShader().loadViewMatrix(camera);
+            nakedRenderer.getShader().loadPhongGouardShading(phongShadingModel, gouraudShadingModel);
             nakedRenderer.render(entities);
             nakedRenderer.render(terrains);
             nakedRenderer.getShader().stop();
@@ -158,6 +162,12 @@ public class MasterRenderer {
             if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
                 nakedRenderer = new NakedRenderer(flatShader, projectionMatrix);
             } else if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+                phongShadingModel = false;
+                gouraudShadingModel = true;
+                nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+                phongShadingModel = true;
+                gouraudShadingModel = false;
                 nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
             }
         }

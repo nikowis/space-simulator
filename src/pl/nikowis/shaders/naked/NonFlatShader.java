@@ -1,5 +1,6 @@
 package pl.nikowis.shaders.naked;
 
+
 /**
  * Class for presenting Gouraud and Phong shading models.
  * Created by Nikodem on 12/30/2016.
