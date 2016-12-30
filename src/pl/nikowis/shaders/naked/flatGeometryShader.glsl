@@ -25,15 +25,15 @@ void main(void){
 
     vec3 thisSurfaceNormal = surfaceNormal[0];
     vec3 thisCameraVector = toCameraVector[0];
-    vec3 thisToLightVector[lightsCount] = toLightVector[0];
+    vec3 vertexToLightVector[lightsCount] = toLightVector[0];
     vec3 unitNormal = normalize(thisSurfaceNormal);
     vec3 unitVectorToCamera = normalize(thisCameraVector);
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     for(int i=0;i<lightsCount;i++) {
-            float distance = length(thisToLightVector[i]);
+            float distance = length(vertexToLightVector[i]);
             float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance *distance);
-            vec3 unitLightVector = normalize(thisToLightVector[i]);
+            vec3 unitLightVector = normalize(vertexToLightVector[i]);
             float nDot1 = dot(unitNormal, unitLightVector);
             float brightness = max(nDot1, 0.0);
             totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
@@ -55,15 +55,15 @@ void main(void){
 
     thisSurfaceNormal = surfaceNormal[1];
     thisCameraVector = toCameraVector[1];
-    thisToLightVector = toLightVector[1];
+    vertexToLightVector = toLightVector[1];
     unitNormal = normalize(thisSurfaceNormal);
     unitVectorToCamera = normalize(thisCameraVector);
     totalDiffuse = vec3(0.0);
     totalSpecular = vec3(0.0);
     for(int i=0;i<lightsCount;i++) {
-            float distance = length(thisToLightVector[i]);
+            float distance = length(vertexToLightVector[i]);
             float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance *distance);
-            vec3 unitLightVector = normalize(thisToLightVector[i]);
+            vec3 unitLightVector = normalize(vertexToLightVector[i]);
             float nDot1 = dot(unitNormal, unitLightVector);
             float brightness = max(nDot1, 0.0);
             totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
@@ -85,15 +85,15 @@ void main(void){
 
     thisSurfaceNormal = surfaceNormal[2];
     thisCameraVector = toCameraVector[2];
-    thisToLightVector= toLightVector[2];
+    vertexToLightVector= toLightVector[2];
     unitNormal = normalize(thisSurfaceNormal);
     unitVectorToCamera = normalize(thisCameraVector);
     totalDiffuse = vec3(0.0);
     totalSpecular = vec3(0.0);
     for(int i=0;i<lightsCount;i++) {
-            float distance = length(thisToLightVector[i]);
+            float distance = length(vertexToLightVector[i]);
             float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance *distance);
-            vec3 unitLightVector = normalize(thisToLightVector[i]);
+            vec3 unitLightVector = normalize(vertexToLightVector[i]);
             float nDot1 = dot(unitNormal, unitLightVector);
             float brightness = max(nDot1, 0.0);
             totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
