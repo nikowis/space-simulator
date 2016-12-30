@@ -15,10 +15,11 @@ uniform vec3 lightColour[lightsCount];
 uniform vec3 attenuation[lightsCount];
 uniform float shineDamper;
 uniform float reflectivty;
+uniform vec3 baseColour;
 
 void main(void){
 
-    vec4 colour = vec4(0.8, 0.8, 0.8,1);
+    vec4 colour = vec4(baseColour,1);
 
     vec3 thisSurfaceNormal = surfaceNormal[0];
     vec3 thisCameraVector = toCameraVector[0];

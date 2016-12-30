@@ -43,7 +43,7 @@ public class NakedRenderer {
      */
     public void render(Map<TexturedUntexturedModel, List<Entity>> entities) {
         for (TexturedUntexturedModel model : entities.keySet()) {
-            prepareModel(model.getRawModel(), model.getShineDamper(), model.getReflectivity());
+            prepareModel(model.getRawModel(), model.getDefaultColour(), model.getShineDamper(), model.getReflectivity());
             List<Entity> batch = entities.get(model);
             for (Entity entity : batch) {
                 loadTransformationMatrix(entity);
@@ -55,19 +55,20 @@ public class NakedRenderer {
 
     public void render(List<Terrain> terrains) {
         for (Terrain terrain : terrains) {
-            prepareModel(terrain.getModel(), terrain.getShineDamper(), terrain.getReflectivity());
+            prepareModel(terrain.getModel(), terrain.getDefaultColour(), terrain.getShineDamper(), terrain.getReflectivity());
             loadTransformationMatrix(terrain);
             GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             unbindModel();
         }
     }
 
-    private void prepareModel(RawModel rawModel, float shineDamper, float reflectivity) {
+    private void prepareModel(RawModel rawModel, Vector3f baseColour, float shineDamper, float reflectivity) {
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
         shader.loadShineVariables(shineDamper, reflectivity);
+        shader.loadBaseColour(baseColour);
     }
 
     private void unbindModel() {
