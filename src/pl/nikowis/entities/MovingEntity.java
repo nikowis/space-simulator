@@ -2,7 +2,8 @@ package pl.nikowis.entities;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
-import pl.nikowis.models.TexturedModel;
+import pl.nikowis.config.Config;
+import pl.nikowis.models.TexturedUntexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.terrains.Terrain;
 
@@ -23,7 +24,7 @@ public class MovingEntity extends Entity {
 
     protected boolean isInAir = false;
 
-    public MovingEntity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+    public MovingEntity(TexturedUntexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         super(model, position, rotX, rotY, rotZ, scale);
     }
 
@@ -82,11 +83,11 @@ public class MovingEntity extends Entity {
         if (this.getPosition().z < 0) {
             this.getPosition().z = 0;
         }
-        if (this.getPosition().x > Terrain.SIZE) {
-            this.getPosition().x = Terrain.SIZE;
+        if (this.getPosition().x > Config.TERRAIN_SIZE) {
+            this.getPosition().x = Config.TERRAIN_SIZE;
         }
-        if (this.getPosition().z > Terrain.SIZE) {
-            this.getPosition().z = Terrain.SIZE;
+        if (this.getPosition().z > Config.TERRAIN_SIZE) {
+            this.getPosition().z = Config.TERRAIN_SIZE;
         }
     }
 

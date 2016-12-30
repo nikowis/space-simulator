@@ -11,7 +11,6 @@ in vec3 toCameraVector[];
 
 out vec4 finalColour;
 
-uniform sampler2D textureSampler;
 uniform vec3 lightColour[lightsCount];
 uniform vec3 attenuation[lightsCount];
 uniform float shineDamper;
@@ -43,7 +42,7 @@ void main(void){
             totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
     }
     totalDiffuse = max(totalDiffuse, 0.2);
-    vec4 col1 = vec4(totalDiffuse, 1.0) * colour + vec4(totalSpecular, 1.0);
+    vec4 col1 = vec4(totalDiffuse, 1.0) * colour ;//+ vec4(totalSpecular, 1.0);
 
     thisSurfaceNormal = surfaceNormal[1];
     thisCameraVector = toCameraVector[1];
@@ -67,7 +66,7 @@ void main(void){
             totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
     }
     totalDiffuse = max(totalDiffuse, 0.2);
-    vec4  col2 = vec4(totalDiffuse, 1.0) * colour + vec4(totalSpecular, 1.0);
+    vec4  col2 = vec4(totalDiffuse, 1.0) * colour ;//+ vec4(totalSpecular, 1.0);
 
     thisSurfaceNormal = surfaceNormal[2];
     thisCameraVector = toCameraVector[2];
@@ -91,7 +90,7 @@ void main(void){
             totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
     }
     totalDiffuse = max(totalDiffuse, 0.2);
-    vec4  col3 = vec4(totalDiffuse, 1.0) * colour + vec4(totalSpecular, 1.0);
+    vec4  col3 = vec4(totalDiffuse, 1.0) * colour;// + vec4(totalSpecular, 1.0);
 
     finalColour = (col1 + col2 + col3 )/ 3;
 

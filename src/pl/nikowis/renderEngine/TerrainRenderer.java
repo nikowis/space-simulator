@@ -9,7 +9,6 @@ import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.shaders.TerrainShader;
 import pl.nikowis.terrains.Terrain;
-import pl.nikowis.textures.ModelTexture;
 import pl.nikowis.textures.TerrainTexturePack;
 import pl.nikowis.toolbox.Maths;
 
@@ -43,7 +42,7 @@ public class TerrainRenderer {
     public void render(List<Terrain> terrains) {
         for (Terrain terrain : terrains) {
             prepareTerrain(terrain);
-            loadModelMatrix(terrain);
+            loadTransformationMatrix(terrain);
             GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             unbindTexutredModel();
         }
@@ -82,7 +81,7 @@ public class TerrainRenderer {
         GL30.glBindVertexArray(0);
     }
 
-    private void loadModelMatrix(Terrain terrain) {
+    private void loadTransformationMatrix(Terrain terrain) {
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(
                 new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1
         );

@@ -1,6 +1,7 @@
 package pl.nikowis.textures;
 
 /**
+ * Class containing multiple textures {@link TerrainTexture}.
  * Created by Nikodem on 12/26/2016.
  */
 public class TerrainTexturePack {

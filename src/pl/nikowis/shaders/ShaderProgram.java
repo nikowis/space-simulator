@@ -6,11 +6,15 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+import pl.nikowis.entities.Camera;
+import pl.nikowis.entities.Light;
+import pl.nikowis.toolbox.Maths;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.List;
 
 /**
  * Abstract class to manipulate uniform variables and load glsl shaders.
@@ -20,11 +24,21 @@ public abstract class ShaderProgram {
 
     //can crash when too many
     public static final int MAX_LIGHTS = 10;
+    private final boolean geometryShaderEnabled;
 
     private int programId;
     private int vertexShaderID;
     private int fragmentShaderID;
     private int geometryShaderID;
+
+    protected int location_transformationMatrix;
+    protected int location_projectionMatrix;
+    protected int location_viewMatrix;
+    protected int location_lightPosition[];
+    protected int location_lightColour[];
+    protected int location_attenuation[];
+    protected int location_shineDamper;
+    protected int location_reflectivity;
 
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
@@ -35,6 +49,7 @@ public abstract class ShaderProgram {
      * @param fragmentFile fragment shader in glsl
      */
     public ShaderProgram(String vertexFile, String fragmentFile, String geometryFile) {
+        geometryShaderEnabled = true;
         vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
         fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
         geometryShaderID = loadShader(geometryFile, GL32.GL_GEOMETRY_SHADER);
@@ -48,7 +63,35 @@ public abstract class ShaderProgram {
         getAllUniformLocations();
     }
 
-    protected abstract void getAllUniformLocations();
+    public ShaderProgram(String vertexFile, String fragmentFile) {
+        geometryShaderEnabled = false;
+        vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
+        fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
+        programId = GL20.glCreateProgram();
+        GL20.glAttachShader(programId, vertexShaderID);
+        GL20.glAttachShader(programId, fragmentShaderID);
+        bindAttributes();
+        GL20.glLinkProgram(programId);
+        GL20.glValidateProgram(programId);
+        getAllUniformLocations();
+    }
+
+    protected void getAllUniformLocations() {
+        location_transformationMatrix = getUniformLocation("transformationMatrix");
+        location_projectionMatrix = getUniformLocation("projectionMatrix");
+        location_viewMatrix = getUniformLocation("viewMatrix");
+        location_shineDamper = getUniformLocation("shineDamper");
+        location_reflectivity = getUniformLocation("reflectivty");
+
+        location_lightPosition = new int[MAX_LIGHTS];
+        location_lightColour = new int[MAX_LIGHTS];
+        location_attenuation = new int[MAX_LIGHTS];
+        for (int i = 0; i < MAX_LIGHTS; i++) {
+            location_lightPosition[i] = getUniformLocation("lightPosition[" + i + "]");
+            location_lightColour[i] = getUniformLocation("lightColour[" + i + "]");
+            location_attenuation[i] = getUniformLocation("attenuation[" + i + "]");
+        }
+    }
 
     protected int getUniformLocation(String uniformName) {
         return GL20.glGetUniformLocation(programId, uniformName);
@@ -69,10 +112,14 @@ public abstract class ShaderProgram {
         stop();
         GL20.glDetachShader(programId, vertexShaderID);
         GL20.glDetachShader(programId, fragmentShaderID);
-        GL20.glDetachShader(programId, geometryShaderID);
+        if (geometryShaderEnabled) {
+            GL20.glDetachShader(programId, geometryShaderID);
+        }
         GL20.glDeleteShader(vertexShaderID);
         GL20.glDeleteShader(fragmentShaderID);
-        GL20.glDeleteShader(geometryShaderID);
+        if (geometryShaderEnabled) {
+            GL20.glDeleteShader(geometryShaderID);
+        }
         GL20.glDeleteProgram(programId);
     }
 
@@ -132,5 +179,43 @@ public abstract class ShaderProgram {
             System.exit(-1);
         }
         return shaderID;
+    }
+
+    public void loadProjectionMatrix(Matrix4f projection) {
+        loadMatrix(location_projectionMatrix, projection);
+    }
+
+    public void loadTransformationMatrix(Matrix4f transformation) {
+        loadMatrix(location_transformationMatrix, transformation);
+    }
+
+    public void loadViewMatrix(Camera camera) {
+        Matrix4f viewMatrix = Maths.createViewMatrix(camera);
+        loadMatrix(location_viewMatrix, viewMatrix);
+    }
+
+    public void loadShineVariables(float damper, float reflectivity) {
+        loadFloat(location_shineDamper, damper);
+        loadFloat(location_reflectivity, reflectivity);
+    }
+
+    /**
+     * Loads the lights to the memory.
+     *
+     * @param lights list of lights with position, colour and attenuation(optional).
+     */
+    public void loadLights(List<Light> lights) {
+        for (int i = 0; i < MAX_LIGHTS; i++) {
+            if (i < lights.size()) {
+                loadVector(location_lightPosition[i], lights.get(i).getPosition());
+                loadVector(location_lightColour[i], lights.get(i).getColour());
+                loadVector(location_attenuation[i], lights.get(i).getAttenuation());
+            } else {
+                //filling black lights for the remaining slots
+                loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
+                loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
+                loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
+            }
+        }
     }
 }

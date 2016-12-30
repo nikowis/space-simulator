@@ -1,6 +1,7 @@
 package pl.nikowis.models;
 
 /**
+ * Model containing raw vertices information.
  * Created by Nikodem on 12/22/2016.
  */
 public class RawModel {
