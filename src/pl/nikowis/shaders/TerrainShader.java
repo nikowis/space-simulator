@@ -16,8 +16,11 @@ import java.util.List;
  */
 public class TerrainShader extends ShaderProgram{
 
-    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\terrainVertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\terrainFragmentShader.glsl";
+    //private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\terrainVertexShader.glsl";
+    //private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\terrainFragmentShader.glsl";
+    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\nakedVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\nakedFragmentShader.glsl";
+    private static final String GEOMETRY_FILE = "src\\pl\\nikowis\\shaders\\geometryShader.glsl";
 
     private int location_transformationMatrix;
     private int location_projectionMatrix;
@@ -35,7 +38,7 @@ public class TerrainShader extends ShaderProgram{
 
 
     public TerrainShader() {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(VERTEX_FILE, FRAGMENT_FILE, GEOMETRY_FILE);
     }
 
     @Override

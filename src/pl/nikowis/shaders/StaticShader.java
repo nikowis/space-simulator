@@ -16,9 +16,11 @@ import java.util.List;
  */
 public class StaticShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\vertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\fragmentShader.glsl";
-
+    //private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\vertexShader.glsl";
+    //private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\fragmentShader.glsl";
+    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\nakedVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\nakedFragmentShader.glsl";
+    private static final String GEOMETRY_FILE = "src\\pl\\nikowis\\shaders\\geometryShader.glsl";
     private int location_transformationMatrix;
     private int location_projectionMatrix;
     private int location_viewMatrix;
@@ -29,7 +31,7 @@ public class StaticShader extends ShaderProgram {
     private int location_reflectivity;
 
     public StaticShader() {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(VERTEX_FILE, FRAGMENT_FILE, GEOMETRY_FILE);
     }
 
     @Override

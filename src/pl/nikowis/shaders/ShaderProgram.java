@@ -3,6 +3,7 @@ package pl.nikowis.shaders;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -23,20 +24,24 @@ public abstract class ShaderProgram {
     private int programId;
     private int vertexShaderID;
     private int fragmentShaderID;
+    private int geometryShaderID;
 
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     /**
      * Constructor
-     * @param vertexFile vertex shader in glsl
+     *
+     * @param vertexFile   vertex shader in glsl
      * @param fragmentFile fragment shader in glsl
      */
-    public ShaderProgram(String vertexFile, String fragmentFile) {
+    public ShaderProgram(String vertexFile, String fragmentFile, String geometryFile) {
         vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
         fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
+        geometryShaderID = loadShader(geometryFile, GL32.GL_GEOMETRY_SHADER);
         programId = GL20.glCreateProgram();
         GL20.glAttachShader(programId, vertexShaderID);
         GL20.glAttachShader(programId, fragmentShaderID);
+        GL20.glAttachShader(programId, geometryShaderID);
         bindAttributes();
         GL20.glLinkProgram(programId);
         GL20.glValidateProgram(programId);
@@ -64,8 +69,10 @@ public abstract class ShaderProgram {
         stop();
         GL20.glDetachShader(programId, vertexShaderID);
         GL20.glDetachShader(programId, fragmentShaderID);
+        GL20.glDetachShader(programId, geometryShaderID);
         GL20.glDeleteShader(vertexShaderID);
         GL20.glDeleteShader(fragmentShaderID);
+        GL20.glDeleteShader(geometryShaderID);
         GL20.glDeleteProgram(programId);
     }
 
@@ -119,8 +126,9 @@ public abstract class ShaderProgram {
         GL20.glShaderSource(shaderID, shaderSource);
         GL20.glCompileShader(shaderID);
         if (GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
+
             System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-            System.err.println("Could not compile shader.");
+            System.err.println("Could not compile shader. " + file);
             System.exit(-1);
         }
         return shaderID;
