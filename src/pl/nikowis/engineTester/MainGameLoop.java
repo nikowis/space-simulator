@@ -7,8 +7,8 @@ import pl.nikowis.entities.Camera;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingEntity;
+import pl.nikowis.models.FullModel;
 import pl.nikowis.models.RawModel;
-import pl.nikowis.models.TexturedUntexturedModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
 import pl.nikowis.renderEngine.MasterRenderer;
@@ -36,11 +36,11 @@ public class MainGameLoop {
         Loader loader = new Loader();
 
         RawModel rawLampModel = OBJLoader.loadObjModel("lamp", loader);
-        TexturedUntexturedModel staticLampModel = new TexturedUntexturedModel(rawLampModel, new ModelTexture(loader.loadTexture("lamp")), new Vector3f(0.2f, 0.2f, 0.2f));
+        FullModel staticLampModel = new FullModel(rawLampModel, new ModelTexture(loader.loadTexture("lamp")), new Vector3f(0.2f, 0.2f, 0.2f));
         RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
-        TexturedUntexturedModel staticTreeModel = new TexturedUntexturedModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
+        FullModel staticTreeModel = new FullModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
         RawModel rawPersonModel = OBJLoader.loadObjModel("person", loader);
-        TexturedUntexturedModel staticPersonModel = new TexturedUntexturedModel(rawPersonModel, new ModelTexture(loader.loadTexture("playerTexture")), new Vector3f(1, 0, 0));
+        FullModel staticPersonModel = new FullModel(rawPersonModel, new ModelTexture(loader.loadTexture("playerTexture")), new Vector3f(1, 0, 0));
 
         List<Entity> entities = new ArrayList<Entity>();
 
@@ -89,7 +89,7 @@ public class MainGameLoop {
         DisplayManager.closeDisplay();
     }
 
-    private static void setupLights(TexturedUntexturedModel staticLampModel, List<Entity> entities, List<Light> lights) {
+    private static void setupLights(FullModel staticLampModel, List<Entity> entities, List<Light> lights) {
         Light sunLight = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
         createLamps(staticLampModel, entities);
         lights.add(sunLight);
@@ -101,7 +101,7 @@ public class MainGameLoop {
         }
     }
 
-    private static void createLamps(TexturedUntexturedModel staticLampModel, List<Entity> entities) {
+    private static void createLamps(FullModel staticLampModel, List<Entity> entities) {
 
         float atBaseFact = 1;
         float atDistFact = 0f;
@@ -128,7 +128,7 @@ public class MainGameLoop {
         entities.add(new Entity(staticLampModel, new Vector3f(867, 0, 1172), 0, 0, 0, 1, light9, 6));
     }
 
-    private static void createTreeOutline(TexturedUntexturedModel staticTreeModel, List<Entity> entities) {
+    private static void createTreeOutline(FullModel staticTreeModel, List<Entity> entities) {
         for (int i = 0; i < Config.TERRAIN_SIZE; i += TREE_OUTLINE_STEP) {
             entities.add(new Entity(staticTreeModel, new Vector3f(0, 0, i), 0, 0, 0, 7));
         }
@@ -143,7 +143,7 @@ public class MainGameLoop {
         }
     }
 
-    private static void createTreesInTheMiddle(TexturedUntexturedModel staticTreeModel, List<Entity> entities) {
+    private static void createTreesInTheMiddle(FullModel staticTreeModel, List<Entity> entities) {
         Random random = new Random();
         for (int i = 0; i < 500; i++) {
             int xCoord = 230 + random.nextInt(450);

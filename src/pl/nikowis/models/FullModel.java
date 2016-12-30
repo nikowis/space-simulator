@@ -7,7 +7,7 @@ import pl.nikowis.textures.ModelTexture;
  * Model containing texture, and untextured informations.
  * Created by Nikodem on 12/24/2016.
  */
-public class TexturedUntexturedModel {
+public class FullModel {
 
     private RawModel rawModel;
     private ModelTexture texture;
@@ -21,7 +21,7 @@ public class TexturedUntexturedModel {
      * @param texture texture to use
      * @param defaultColour default colour to use without texture
      */
-    public TexturedUntexturedModel(RawModel rawModel, ModelTexture texture, Vector3f defaultColour) {
+    public FullModel(RawModel rawModel, ModelTexture texture, Vector3f defaultColour) {
         this.rawModel = rawModel;
         this.texture = texture;
         this.defaultColour = defaultColour;

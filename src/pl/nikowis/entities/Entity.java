@@ -1,20 +1,20 @@
 package pl.nikowis.entities;
 
 import org.lwjgl.util.vector.Vector3f;
-import pl.nikowis.models.TexturedUntexturedModel;
+import pl.nikowis.models.FullModel;
 
 /**
  * Created by Nikodem on 12/24/2016.
  */
 public class Entity {
 
-    protected TexturedUntexturedModel model;
+    protected FullModel model;
     protected Vector3f position;
     protected float rotX, rotY, rotZ;
     protected float scale;
     protected Light light;
 
-    public Entity(TexturedUntexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+    public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         this.model = model;
         this.position = position;
         this.rotX = rotX;
@@ -24,7 +24,7 @@ public class Entity {
         light = null;
     }
 
-    public Entity(TexturedUntexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Light light, float lightYDiff) {
+    public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Light light, float lightYDiff) {
         this.model = model;
         this.position = position;
         this.rotX = rotX;
@@ -49,11 +49,11 @@ public class Entity {
         this.rotZ += dz;
     }
 
-    public TexturedUntexturedModel getModel() {
+    public FullModel getModel() {
         return model;
     }
 
-    public void setModel(TexturedUntexturedModel model) {
+    public void setModel(FullModel model) {
         this.model = model;
     }
 

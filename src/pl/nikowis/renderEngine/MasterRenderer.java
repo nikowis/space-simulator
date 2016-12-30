@@ -8,10 +8,11 @@ import pl.nikowis.config.Config;
 import pl.nikowis.entities.Camera;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
-import pl.nikowis.models.TexturedUntexturedModel;
-import pl.nikowis.shaders.NakedShader;
+import pl.nikowis.models.FullModel;
 import pl.nikowis.shaders.StaticShader;
 import pl.nikowis.shaders.TerrainShader;
+import pl.nikowis.shaders.naked.FlatShader;
+import pl.nikowis.shaders.naked.NonFlatShader;
 import pl.nikowis.terrains.Terrain;
 
 import java.util.ArrayList;
@@ -37,9 +38,10 @@ public class MasterRenderer {
     private NakedRenderer nakedRenderer;
     private StaticShader staticShader = new StaticShader();
     private TerrainShader terrainShader = new TerrainShader();
-    private NakedShader nakedShader = new NakedShader();
+    private NonFlatShader nonFlatShader = new NonFlatShader();
+    private FlatShader flatShader = new FlatShader();
 
-    private Map<TexturedUntexturedModel, List<Entity>> entities = new HashMap<TexturedUntexturedModel, List<Entity>>();
+    private Map<FullModel, List<Entity>> entities = new HashMap<FullModel, List<Entity>>();
     private List<Terrain> terrains = new ArrayList<>();
 
     public MasterRenderer() {
@@ -48,7 +50,7 @@ public class MasterRenderer {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-        nakedRenderer = new NakedRenderer(nakedShader, projectionMatrix);
+        nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
     }
 
     /**
@@ -65,19 +67,18 @@ public class MasterRenderer {
             staticShader.loadViewMatrix(camera);
             entityRenderer.render(entities);
             staticShader.stop();
-
             terrainShader.start();
             terrainShader.loadLights(lights);
             terrainShader.loadViewMatrix(camera);
             terrainRenderer.render(terrains);
             terrainShader.stop();
         } else {
-            nakedShader.start();
-            nakedShader.loadLights(lights);
-            nakedShader.loadViewMatrix(camera);
+            nakedRenderer.getShader().start();
+            nakedRenderer.getShader().loadLights(lights);
+            nakedRenderer.getShader().loadViewMatrix(camera);
             nakedRenderer.render(entities);
             nakedRenderer.render(terrains);
-            nakedShader.stop();
+            nakedRenderer.getShader().stop();
         }
     }
 
@@ -96,7 +97,7 @@ public class MasterRenderer {
      * @param entity entity to process
      */
     public void processEntity(Entity entity) {
-        TexturedUntexturedModel entityModel = entity.getModel();
+        FullModel entityModel = entity.getModel();
         List<Entity> batch = entities.get(entityModel);
         if (batch != null) {
             batch.add(entity);
@@ -113,7 +114,8 @@ public class MasterRenderer {
     public void cleanUp() {
         staticShader.cleanUp();
         terrainShader.cleanUp();
-        nakedShader.cleanUp();
+        nonFlatShader.cleanUp();
+        flatShader.cleanUp();
     }
 
 
@@ -139,7 +141,7 @@ public class MasterRenderer {
     }
 
     /**
-     * Checks if the rendering mode should be changed;
+     * Checks if the rendering mode should be changed.
      */
     public void checkInput() {
 
@@ -152,6 +154,12 @@ public class MasterRenderer {
                 nakedMode = false;
             }
         }
+        if (nakedMode) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
+                nakedRenderer = new NakedRenderer(flatShader, projectionMatrix);
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
+                nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
+            }
+        }
     }
-
 }

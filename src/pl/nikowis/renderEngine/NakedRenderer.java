@@ -6,9 +6,9 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.entities.Entity;
+import pl.nikowis.models.FullModel;
 import pl.nikowis.models.RawModel;
-import pl.nikowis.models.TexturedUntexturedModel;
-import pl.nikowis.shaders.NakedShader;
+import pl.nikowis.shaders.naked.NakedShader;
 import pl.nikowis.terrains.Terrain;
 import pl.nikowis.toolbox.Maths;
 
@@ -41,8 +41,8 @@ public class NakedRenderer {
      *
      * @param entities map of textured models and entities.
      */
-    public void render(Map<TexturedUntexturedModel, List<Entity>> entities) {
-        for (TexturedUntexturedModel model : entities.keySet()) {
+    public void render(Map<FullModel, List<Entity>> entities) {
+        for (FullModel model : entities.keySet()) {
             prepareModel(model.getRawModel(), model.getDefaultColour(), model.getShineDamper(), model.getReflectivity());
             List<Entity> batch = entities.get(model);
             for (Entity entity : batch) {
@@ -90,5 +90,9 @@ public class NakedRenderer {
                 new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1
         );
         shader.loadTransformationMatrix(transformationMatrix);
+    }
+
+    public NakedShader getShader() {
+        return shader;
     }
 }

@@ -22,13 +22,13 @@ public class Config {
     public static final float FAR_PLANE = 1500;
 
     /**
-     *
+     * Terrain size.
      */
     public static final float TERRAIN_SIZE = 1600;
 
     /**
-     *
+     * Terrain vertex count.
      */
-    public static final int TERRAIN_VERTEX_COUNT = 128;
+    public static final int TERRAIN_VERTEX_COUNT = 150;
 
 }

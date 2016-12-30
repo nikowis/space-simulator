@@ -3,9 +3,8 @@ package pl.nikowis.entities;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.config.Config;
-import pl.nikowis.models.TexturedUntexturedModel;
+import pl.nikowis.models.FullModel;
 import pl.nikowis.renderEngine.DisplayManager;
-import pl.nikowis.terrains.Terrain;
 
 /**
  * Created by Nikodem on 12/27/2016.
@@ -24,7 +23,7 @@ public class MovingEntity extends Entity {
 
     protected boolean isInAir = false;
 
-    public MovingEntity(TexturedUntexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+    public MovingEntity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         super(model, position, rotX, rotY, rotZ, scale);
     }
 

@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.models.RawModel;
-import pl.nikowis.models.TexturedUntexturedModel;
+import pl.nikowis.models.FullModel;
 import pl.nikowis.shaders.StaticShader;
 import pl.nikowis.textures.ModelTexture;
 import pl.nikowis.toolbox.Maths;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * Renderer for entities. This class optimizes and enables rendering of the
- * same TexturedUntexturedModel multiple times.
+ * same FullModel multiple times.
  * Created by Nikodem on 12/23/2016.
  */
 public class EntityRenderer {
@@ -41,8 +41,8 @@ public class EntityRenderer {
      * Renders all the entities with associated texturedModels.
      * @param entities map of textured models and entities.
      */
-    public void render(Map<TexturedUntexturedModel, List<Entity>> entities) {
-        for(TexturedUntexturedModel model : entities.keySet()) {
+    public void render(Map<FullModel, List<Entity>> entities) {
+        for(FullModel model : entities.keySet()) {
             prepareTexutredModel(model);
             List<Entity> batch = entities.get(model);
             for(Entity entity : batch) {
@@ -53,7 +53,7 @@ public class EntityRenderer {
         }
     }
 
-    private void prepareTexutredModel(TexturedUntexturedModel model) {
+    private void prepareTexutredModel(FullModel model) {
         RawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
