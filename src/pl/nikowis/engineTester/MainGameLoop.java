@@ -41,6 +41,8 @@ public class MainGameLoop {
         FullModel staticTreeModel = new FullModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
         RawModel rawPersonModel = OBJLoader.loadObjModel("person", loader);
         FullModel staticPersonModel = new FullModel(rawPersonModel, new ModelTexture(loader.loadTexture("playerTexture")), new Vector3f(1, 0, 0));
+        staticPersonModel.setShineDamper(100);
+        staticPersonModel.setReflectivity(1);
 
         List<Entity> entities = new ArrayList<Entity>();
 
@@ -61,7 +63,7 @@ public class MainGameLoop {
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap2"));
         //####################################################################
 
-        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.1f,0.1f,0.1f));
+        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.1f, 0.1f, 0.1f));
 
         Camera camera = new Camera(player);
         MasterRenderer masterRenderer = new MasterRenderer();

@@ -12,6 +12,8 @@ public abstract class NakedShader extends ShaderProgram {
     protected int location_baseColour;
     protected int location_phongShadingEnabled;
     protected int location_gouraudShadingEnabled;
+    protected int location_phongReflectionEnabled;
+    protected int location_blinnReflectionEnabled;
 
 
     public NakedShader(String vertexFile, String fragmentFile, String geometryFile) {
@@ -34,12 +36,22 @@ public abstract class NakedShader extends ShaderProgram {
         loadBoolean(location_gouraudShadingEnabled, gouraudShadingEnabled);
     }
 
+    public void loadPhongBlinnReflection(boolean phongReflectionEnabled, boolean blinnReflectionEnabled) {
+        if (phongReflectionEnabled == true && phongReflectionEnabled == blinnReflectionEnabled) {
+            throw new IllegalStateException("Cannot enable both Phong and Blinn reflection models.");
+        }
+        loadBoolean(location_phongReflectionEnabled, phongReflectionEnabled);
+        loadBoolean(location_blinnReflectionEnabled, blinnReflectionEnabled);
+    }
+
     @Override
     protected void getAllUniformLocations() {
         super.getAllUniformLocations();
         location_baseColour = getUniformLocation("baseColour");
         location_phongShadingEnabled = getUniformLocation("phongShadingEnabled");
         location_gouraudShadingEnabled = getUniformLocation("gouraudShadingEnabled");
+        location_phongReflectionEnabled = getUniformLocation("phongReflectionEnabled");
+        location_blinnReflectionEnabled = getUniformLocation("blinnReflectionEnabled");
     }
 
     @Override

@@ -32,6 +32,8 @@ public class MasterRenderer {
     private boolean nakedMode = false;
     private boolean phongShadingModel = true;
     private boolean gouraudShadingModel = false;
+    private boolean phongReflectionModel = false;
+    private boolean blinnReflectionModel = false;
 
     private Matrix4f projectionMatrix;
 
@@ -54,6 +56,7 @@ public class MasterRenderer {
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
         nonFlatShader.loadPhongGouardShading(true, false);
+        nonFlatShader.loadPhongBlinnReflection(true, false);
     }
 
     /**
@@ -80,6 +83,7 @@ public class MasterRenderer {
             nakedRenderer.getShader().loadLights(lights);
             nakedRenderer.getShader().loadViewMatrix(camera);
             nakedRenderer.getShader().loadPhongGouardShading(phongShadingModel, gouraudShadingModel);
+            nakedRenderer.getShader().loadPhongBlinnReflection(phongReflectionModel, blinnReflectionModel);
             nakedRenderer.render(entities);
             nakedRenderer.render(terrains);
             nakedRenderer.getShader().stop();
@@ -165,10 +169,21 @@ public class MasterRenderer {
                 phongShadingModel = false;
                 gouraudShadingModel = true;
                 nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
-            } else if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
                 phongShadingModel = true;
                 gouraudShadingModel = false;
                 nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
+                phongReflectionModel = true;
+                blinnReflectionModel = false;
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
+                phongReflectionModel = false;
+                blinnReflectionModel = true;
+            } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
+                phongReflectionModel = false;
+                blinnReflectionModel = false;
             }
         }
     }

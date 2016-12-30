@@ -16,6 +16,8 @@ uniform vec3 attenuation[lightsCount];
 uniform float shineDamper;
 uniform float reflectivty;
 uniform vec3 baseColour;
+uniform float phongReflectionEnabled;
+uniform float blinnReflectionEnabled;
 
 void main(void){
 
@@ -34,16 +36,22 @@ void main(void){
             vec3 unitLightVector = normalize(thisToLightVector[i]);
             float nDot1 = dot(unitNormal, unitLightVector);
             float brightness = max(nDot1, 0.0);
-            vec3 lightDirection = -unitLightVector;
-            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-            float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-            specularFactor = max(specularFactor, 0.0);
-            float dampedFactor = pow(specularFactor, shineDamper);
             totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
-            totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+
+            if(phongReflectionEnabled==1.0) {
+                vec3 lightDirection = -unitLightVector;
+                vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+                float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+                specularFactor = max(specularFactor, 0.0);
+                float dampedFactor = pow(specularFactor, shineDamper);
+                totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+            }
     }
     totalDiffuse = max(totalDiffuse, 0.2);
-    vec4 col1 = vec4(totalDiffuse, 1.0) * colour ;//+ vec4(totalSpecular, 1.0);
+    vec4 col1 = vec4(totalDiffuse, 1.0) * colour ;
+    if(phongReflectionEnabled==1.0) {
+        col1 = col1 + vec4(totalSpecular, 1.0);
+    }
 
     thisSurfaceNormal = surfaceNormal[1];
     thisCameraVector = toCameraVector[1];
@@ -58,16 +66,22 @@ void main(void){
             vec3 unitLightVector = normalize(thisToLightVector[i]);
             float nDot1 = dot(unitNormal, unitLightVector);
             float brightness = max(nDot1, 0.0);
-            vec3 lightDirection = -unitLightVector;
-            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-            float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-            specularFactor = max(specularFactor, 0.0);
-            float dampedFactor = pow(specularFactor, shineDamper);
             totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
-            totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+
+            if(phongReflectionEnabled==1.0) {
+                vec3 lightDirection = -unitLightVector;
+                vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+                float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+                specularFactor = max(specularFactor, 0.0);
+                float dampedFactor = pow(specularFactor, shineDamper);
+                totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+            }
     }
     totalDiffuse = max(totalDiffuse, 0.2);
-    vec4  col2 = vec4(totalDiffuse, 1.0) * colour ;//+ vec4(totalSpecular, 1.0);
+    vec4  col2 = vec4(totalDiffuse, 1.0) * colour ;
+    if(phongReflectionEnabled==1.0) {
+        col2 = col2 + vec4(totalSpecular, 1.0);
+    }
 
     thisSurfaceNormal = surfaceNormal[2];
     thisCameraVector = toCameraVector[2];
@@ -82,16 +96,21 @@ void main(void){
             vec3 unitLightVector = normalize(thisToLightVector[i]);
             float nDot1 = dot(unitNormal, unitLightVector);
             float brightness = max(nDot1, 0.0);
-            vec3 lightDirection = -unitLightVector;
-            vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-            float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-            specularFactor = max(specularFactor, 0.0);
-            float dampedFactor = pow(specularFactor, shineDamper);
             totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
-            totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+            if(phongReflectionEnabled==1.0) {
+                vec3 lightDirection = -unitLightVector;
+                vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+                float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+                specularFactor = max(specularFactor, 0.0);
+                float dampedFactor = pow(specularFactor, shineDamper);
+                totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+            }
     }
     totalDiffuse = max(totalDiffuse, 0.2);
-    vec4  col3 = vec4(totalDiffuse, 1.0) * colour;// + vec4(totalSpecular, 1.0);
+    vec4  col3 = vec4(totalDiffuse, 1.0) * colour;
+    if(phongReflectionEnabled==1.0) {
+        col3 = col3 + vec4(totalSpecular, 1.0);
+    }
 
     finalColour = (col1 + col2 + col3 )/ 3;
 
