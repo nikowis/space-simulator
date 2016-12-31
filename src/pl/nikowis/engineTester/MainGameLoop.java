@@ -23,7 +23,6 @@ import pl.nikowis.textures.TerrainTexturePack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Main class.
@@ -31,6 +30,10 @@ import java.util.Random;
  */
 public class MainGameLoop {
 
+    private static float atBaseFact = 1;
+    private static float atDistFact = 0f;
+    private static float atDistSquareFact = 0.001f;
+    private static Vector3f atenuation = new Vector3f(atBaseFact, atDistFact, atDistSquareFact);
 
     public static void main(String[] args) {
 
@@ -47,7 +50,7 @@ public class MainGameLoop {
         staticStallModel.setReflectivity(1);
 
         RawModel rawBuildingsModel = OBJLoader.loadObjModel("building", loader);
-        FullModel staticBuildingsModel = new FullModel(rawBuildingsModel, new ModelTexture(loader.loadTexture("buildingsTexture")), new Vector3f(0.5f, 0.2f, 0.2f));
+        FullModel staticBuildingsModel = new FullModel(rawBuildingsModel, new ModelTexture(loader.loadTexture("buildingsTexture")), new Vector3f(1, 1, 0));
         staticStallModel.setShineDamper(100);
         staticStallModel.setReflectivity(1);
 
@@ -62,7 +65,7 @@ public class MainGameLoop {
         staticStallModel.setReflectivity(1);
 
         RawModel rawBoxModel = OBJLoader.loadObjModel("box", loader);
-        FullModel staticBoxModel = new FullModel(rawBoxModel, new ModelTexture(loader.loadTexture("box")), new Vector3f(0.9f, 0.9f, 0.9f));
+        FullModel staticBoxModel = new FullModel(rawBoxModel, new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
         staticBoxModel.setShineDamper(100);
         staticBoxModel.setReflectivity(1);
 
@@ -111,9 +114,12 @@ public class MainGameLoop {
         Entity farmhouseEntity = new Entity(staticFarmhouseModel, new Vector3f(230, 0, 260), 0, 80, 0, 2);
         Entity planeEntity = new Entity(staticPlaneModel, new Vector3f(430, 50, 200), 220, 80, 140, 5);
 
-        MovingEntity carEntity = new MovingEntity(staticCarModel, new Vector3f(240, 100, 450), 0, 0, 0, 2);
-        List<Light> lights = new ArrayList<>();
-        setupLampsAndSun(staticLampModel, entities, lights);
+        List<Light> carLights = new ArrayList<>();
+        carLights.add(new Light(new Vector3f(-4, 3, 13), new Vector3f(3, 3, 3), atenuation));
+        carLights.add(new Light(new Vector3f(4, 3, 13), new Vector3f(3, 3, 3), atenuation));
+
+        MovingEntity carEntity = new MovingEntity(staticCarModel, new Vector3f(240, 0, 450), 0, 0, 0, 2, carLights, 3);
+
         entities.add(stallEntity);
         entities.add(stallEntity2);
         entities.add(carEntity);
@@ -129,6 +135,9 @@ public class MainGameLoop {
         entities.add(buildingsEntity);
         entities.add(farmhouseEntity);
         entities.add(planeEntity);
+
+        List<Light> lights = new ArrayList<>();
+        setupLampsAndSun(staticLampModel, entities, lights);
         //####################################################################
 
         //###############################   TERRAIN  #########################
@@ -175,18 +184,13 @@ public class MainGameLoop {
         lights.add(sunLight);
         for (int i = 0; i < entities.size(); i++) {
             Entity en = entities.get(i);
-            if (en.getLight() != null) {
-                lights.add(en.getLight());
+            if (en.getLights() != null) {
+                lights.addAll(en.getLights());
             }
         }
     }
 
     private static void createLamps(FullModel staticLampModel, List<Entity> entities) {
-        float atBaseFact = 1;
-        float atDistFact = 0f;
-        float atDistSquareFact = 0.0001f;
-        Vector3f atenuation = new Vector3f(atBaseFact, atDistFact, atDistSquareFact);
-
         Light light = new Light(new Vector3f(0, 6, 0), new Vector3f(8, 8, 8), atenuation);
         Light light3 = new Light(new Vector3f(0, 6, 0), new Vector3f(0, 0, 15), atenuation);
         Light light4 = new Light(new Vector3f(0, 6, 0), new Vector3f(8, 0, 0), atenuation);
@@ -214,12 +218,4 @@ public class MainGameLoop {
         }
     }
 
-    private static void createTreesInTheMiddle(FullModel staticTreeModel, List<Entity> entities) {
-        Random random = new Random();
-        for (int i = 0; i < 500; i++) {
-            int xCoord = 230 + random.nextInt(450);
-            int zCoord = 490 + random.nextInt((int) (Config.TERRAIN_SIZE / 4));
-            entities.add(new Entity(staticTreeModel, new Vector3f(xCoord, 0, zCoord), 0, 0, 0, 7));
-        }
-    }
 }

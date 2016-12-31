@@ -3,6 +3,9 @@ package pl.nikowis.entities;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.models.FullModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Nikodem on 12/24/2016.
  */
@@ -12,7 +15,10 @@ public class Entity {
     protected Vector3f position;
     protected float rotX, rotY, rotZ;
     protected float scale;
-    protected Light light;
+    protected List<Light> lights;
+
+    protected float flatPositionToLightDistance;
+    protected float betaRad;
 
     public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
         this.model = model;
@@ -21,17 +27,34 @@ public class Entity {
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
-        light = null;
     }
 
-    public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Light light) {
+    public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, List<Light> lights) {
         this.model = model;
         this.position = position;
         this.rotX = rotX;
         this.rotY = rotY;
         this.rotZ = rotZ;
         this.scale = scale;
-        this.light = light;
+        this.lights = lights;
+        for (Light light : lights) {
+            Vector3f relativeLightPos = light.getPosition();
+            flatPositionToLightDistance = (float) Math.sqrt(relativeLightPos.x * relativeLightPos.x + relativeLightPos.z * relativeLightPos.z);
+            betaRad = (float) Math.atan(relativeLightPos.x / relativeLightPos.z);
+            Vector3f newLightPos = new Vector3f(position.x + relativeLightPos.x, position.y + relativeLightPos.y, position.z + relativeLightPos.z);
+            light.setPosition(newLightPos);
+        }
+    }
+
+    public Entity(FullModel model, Vector3f position, int rotX, int rotY, int rotZ, int scale, Light light) {
+        this.model = model;
+        this.position = position;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.scale = scale;
+        this.lights = new ArrayList<>();
+        this.lights.add(light);
         Vector3f relativeLightPos = light.getPosition();
         Vector3f newLightPos = new Vector3f(position.x + relativeLightPos.x, position.y + relativeLightPos.y, position.z + relativeLightPos.z);
         light.setPosition(newLightPos);
@@ -97,7 +120,11 @@ public class Entity {
         this.scale = scale;
     }
 
-    public Light getLight() {
-        return light;
+    public List<Light> getLights() {
+        return lights;
+    }
+
+    public void setLights(List<Light> lights) {
+        this.lights = lights;
     }
 }

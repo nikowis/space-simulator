@@ -6,10 +6,14 @@ import pl.nikowis.config.Config;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.renderEngine.DisplayManager;
 
+import java.util.List;
+
 /**
  * Created by Nikodem on 12/27/2016.
  */
 public class MovingEntity extends Entity {
+
+    private float lightYDist;
 
     protected float move_speed = 200;
     protected float turn_speed = 200;
@@ -27,6 +31,11 @@ public class MovingEntity extends Entity {
         super(model, position, rotX, rotY, rotZ, scale);
     }
 
+    public MovingEntity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, List<Light> lights, float lightYDist) {
+        super(model, position, rotX, rotY, rotZ, scale, lights);
+        this.lightYDist = lightYDist;
+    }
+
     public void move() {
         checkInputs();
         performMove();
@@ -34,17 +43,47 @@ public class MovingEntity extends Entity {
     }
 
     private void performMove() {
-        super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+
+        super.increaseRotation(0, adjustedTurnSpeed, 0);
+
         float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
         super.increasePosition(dx, 0, dz);
         upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
         super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+        if (this.lights != null) {
+            for (Light l : lights) {
+                l.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+            }
+            moveCarLights();
+        }
         if (super.getPosition().y < TERRAIN_HEIGHT) {
             upwardsSpeed = 0;
             isInAir = false;
             super.getPosition().y = TERRAIN_HEIGHT;
+            if (this.lights != null) {
+                for (Light l : lights) {
+                    l.getPosition().y = TERRAIN_HEIGHT + lightYDist;
+                }
+            }
+        }
+    }
+
+    private void moveCarLights() {
+        if (lights.size() == 2) {
+            float alfaRad = (float) Math.toRadians(rotY);
+            float dx1 = (float) (flatPositionToLightDistance * Math.sin(alfaRad + betaRad));
+            float dz1 = (float) (flatPositionToLightDistance * Math.cos(alfaRad + betaRad));
+            float dx2 = (float) (flatPositionToLightDistance * Math.sin(alfaRad - betaRad));
+            float dz2 = (float) (flatPositionToLightDistance * Math.cos(alfaRad - betaRad));
+            Light l1 = lights.get(0);
+            Light l2 = lights.get(1);
+            l1.getPosition().x = position.x + dx1;
+            l1.getPosition().z = position.z + dz1;
+            l2.getPosition().x = position.x + dx2;
+            l2.getPosition().z = position.z + dz2;
         }
     }
 
