@@ -8,8 +8,8 @@ package pl.nikowis.shaders;
  */
 public class TerrainShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\terrainVertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\terrainFragmentShader.glsl";
+    private static final String VERTEX_FILE = "/pl/nikowis/shaders/terrainVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "/pl/nikowis/shaders/terrainFragmentShader.glsl";
 
     private int location_backgroundTexture;
     private int location_rTexture;

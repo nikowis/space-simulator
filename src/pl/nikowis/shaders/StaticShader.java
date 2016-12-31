@@ -8,8 +8,8 @@ package pl.nikowis.shaders;
  */
 public class StaticShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\vertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\fragmentShader.glsl";
+    private static final String VERTEX_FILE = "/pl/nikowis/shaders/vertexShader.glsl";
+    private static final String FRAGMENT_FILE = "/pl/nikowis/shaders/fragmentShader.glsl";
 
     public StaticShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);

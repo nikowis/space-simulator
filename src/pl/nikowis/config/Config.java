@@ -36,4 +36,10 @@ public class Config {
      */
     public static final int TREE_OUTLINE_STEP = 7;
 
+    /**
+     * If multi jump should be allowed.
+     */
+    public static final boolean ALLOW_MULTI_JUMP = true;
+
+
 }

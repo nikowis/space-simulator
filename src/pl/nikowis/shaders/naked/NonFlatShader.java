@@ -7,8 +7,8 @@ package pl.nikowis.shaders.naked;
  */
 public class NonFlatShader extends NakedShader {
 
-    private static final String VERTEX_FILE = "src\\pl\\nikowis\\shaders\\naked\\nakedVertexShader.glsl";
-    private static final String FRAGMENT_FILE = "src\\pl\\nikowis\\shaders\\naked\\nonflatFragmentShader.glsl";
+    private static final String VERTEX_FILE = "/pl/nikowis/shaders/naked/nakedVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "/pl/nikowis/shaders/naked/nonflatFragmentShader.glsl";
 
     public NonFlatShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);

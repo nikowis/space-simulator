@@ -55,7 +55,7 @@ public class MovingEntity extends Entity {
         super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
         if (this.lights != null) {
             for (Light l : lights) {
-                l.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+                l.getPosition().y = position.getY() + lightYDist;
             }
             moveCarLights();
         }
@@ -109,7 +109,7 @@ public class MovingEntity extends Entity {
             this.currentTurnSpeed = 0;
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !isInAir) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && (Config.ALLOW_MULTI_JUMP || !isInAir)) {
             jump();
         }
     }

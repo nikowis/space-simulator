@@ -78,3 +78,4 @@ src/main/webapp/VAADIN/themes/mytheme/styles.scss.cache
 mvnw.cmd
 mvnw
 .mvn/*
+src/META-INF/MANIFEST.MF
