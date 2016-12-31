@@ -3,10 +3,13 @@ package pl.nikowis.engineTester;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.config.Config;
-import pl.nikowis.entities.Camera;
+import pl.nikowis.entities.CameraManager;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingEntity;
+import pl.nikowis.entities.StaticCamera;
+import pl.nikowis.entities.ThirdPersonCamera;
+import pl.nikowis.entities.TurningCamera;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.renderEngine.DisplayManager;
@@ -35,43 +38,46 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
 
+        //###############################   MODELS  ##########################
         RawModel rawLampModel = OBJLoader.loadObjModel("lamp", loader);
         FullModel staticLampModel = new FullModel(rawLampModel, new ModelTexture(loader.loadTexture("lamp")), new Vector3f(0.2f, 0.2f, 0.2f));
         RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
         FullModel staticTreeModel = new FullModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
+        staticTreeModel.setShineDamper(100);
+        staticTreeModel.setReflectivity(1);
         RawModel rawPersonModel = OBJLoader.loadObjModel("person", loader);
         FullModel staticPersonModel = new FullModel(rawPersonModel, new ModelTexture(loader.loadTexture("playerTexture")), new Vector3f(1, 0, 0));
         staticPersonModel.setShineDamper(100);
         staticPersonModel.setReflectivity(1);
+        //####################################################################
 
+        //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<Entity>();
-
         createTreeOutline(staticTreeModel, entities);
-
-
-        MovingEntity player = new MovingEntity(staticPersonModel, new Vector3f(240, 0, 450), 0, 0, 0, 0.7f);
-
+        MovingEntity player = new MovingEntity(staticPersonModel, new Vector3f(240, 0, 450), 0, 0, 0, 2f);
         List<Light> lights = new ArrayList<>();
-        setupLights(staticLampModel, entities, lights);
+        setupLamps(staticLampModel, entities, lights);
+        //####################################################################
 
-        //###############################   TERRAIN  #####################################
+        //###############################   TERRAIN  #########################
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap2"));
+        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.1f, 0.1f, 0.1f));
         //####################################################################
 
-        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.1f, 0.1f, 0.1f));
+        //###############################   CAMERAS  #########################
+        StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 50, 0), 10);
+        staticCamera.setYaw(130);
+        ThirdPersonCamera thirdPersonCamera = new ThirdPersonCamera(player);
+        TurningCamera turningCamera = new TurningCamera(new Vector3f(0, 50, 0), 10, player);
+        CameraManager cameraManager = new CameraManager(staticCamera, thirdPersonCamera, turningCamera);
+        //####################################################################
 
-        Camera camera = new Camera(player);
         MasterRenderer masterRenderer = new MasterRenderer();
-
-        ModelTexture texture = staticTreeModel.getTexture();
-        texture.setShineDamper(100);
-        texture.setReflectivity(1);
-
         masterRenderer.processEntity(player);
         masterRenderer.processTerrain(terrain);
         for (Entity entity : entities) {
@@ -79,10 +85,11 @@ public class MainGameLoop {
         }
 
         while (!Display.isCloseRequested()) {
-            camera.move();
+            cameraManager.checkInput();
+            cameraManager.moveCurrentCamera();
             player.move();
             masterRenderer.checkInput();
-            masterRenderer.render(lights, camera);
+            masterRenderer.render(lights, cameraManager.getCurrentCamera());
             DisplayManager.updateDisplay();
         }
 
@@ -91,7 +98,7 @@ public class MainGameLoop {
         DisplayManager.closeDisplay();
     }
 
-    private static void setupLights(FullModel staticLampModel, List<Entity> entities, List<Light> lights) {
+    private static void setupLamps(FullModel staticLampModel, List<Entity> entities, List<Light> lights) {
         Light sunLight = new Light(new Vector3f(0, 10000, -7000), new Vector3f(0.4f, 0.4f, 0.4f));
         createLamps(staticLampModel, entities);
         lights.add(sunLight);

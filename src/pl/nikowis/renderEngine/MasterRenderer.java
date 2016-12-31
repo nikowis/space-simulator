@@ -63,7 +63,7 @@ public class MasterRenderer {
      * Renders all processed entities in each frame.
      *
      * @param lights lights to factor in
-     * @param camera camera which watches the scene
+     * @param camera thirdPersonCamera which watches the scene
      */
     public void render(List<Light> lights, Camera camera) {
         prepare();
