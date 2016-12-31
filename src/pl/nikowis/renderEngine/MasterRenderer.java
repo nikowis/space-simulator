@@ -29,10 +29,10 @@ public class MasterRenderer {
     /**
      * Controls rendering mode ( naked or textured ).
      */
-    private boolean nakedMode = false;
+    private boolean nakedMode = true;
     private boolean phongShadingModel = true;
     private boolean gouraudShadingModel = false;
-    private boolean phongReflectionModel = false;
+    private boolean phongReflectionModel = true;
     private boolean blinnReflectionModel = false;
 
     private Matrix4f projectionMatrix;

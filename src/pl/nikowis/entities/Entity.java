@@ -24,7 +24,7 @@ public class Entity {
         light = null;
     }
 
-    public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Light light, float lightYDiff) {
+    public Entity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Light light) {
         this.model = model;
         this.position = position;
         this.rotX = rotX;
@@ -32,9 +32,9 @@ public class Entity {
         this.rotZ = rotZ;
         this.scale = scale;
         this.light = light;
-        light.getPosition().x = position.getX();
-        light.getPosition().y = position.getY() + lightYDiff;
-        light.getPosition().z = position.getZ();
+        Vector3f relativeLightPos = light.getPosition();
+        Vector3f newLightPos = new Vector3f(position.x + relativeLightPos.x, position.y + relativeLightPos.y, position.z + relativeLightPos.z);
+        light.setPosition(newLightPos);
     }
 
     public void increasePosition(float dx, float dy, float dz) {

@@ -11,9 +11,9 @@ import pl.nikowis.renderEngine.DisplayManager;
  */
 public class MovingEntity extends Entity {
 
-    protected float move_speed = 500;
-    protected float turn_speed = 160;
-    protected float jump_power = 30;
+    protected float move_speed = 200;
+    protected float turn_speed = 200;
+    protected float jump_power = 100;
     protected static final float GRAVITY = -100;
     protected static final float TERRAIN_HEIGHT = 0;
 

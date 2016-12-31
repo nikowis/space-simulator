@@ -28,10 +28,11 @@ public class Loader {
 
     /**
      * Loads specified data to the memory as a VAO.
-     * @param positions vertices
+     *
+     * @param positions     vertices
      * @param textureCoords texture coordinates
-     * @param normals normals
-     * @param indices indices
+     * @param normals       normals
+     * @param indices       indices
      * @return
      */
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
@@ -47,6 +48,7 @@ public class Loader {
 
     /**
      * Loads a texture png file, and binds it in OpenGL.
+     *
      * @param fileName texture file name ( without .png )
      * @return texture id
      */

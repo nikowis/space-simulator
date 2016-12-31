@@ -24,11 +24,16 @@ public class Config {
     /**
      * Terrain size.
      */
-    public static final float TERRAIN_SIZE = 1600;
+    public static final float TERRAIN_SIZE = 800;
 
     /**
      * Terrain vertex count.
      */
     public static final int TERRAIN_VERTEX_COUNT = 150;
+
+    /**
+     * Tree map outline step.
+     */
+    public static final int TREE_OUTLINE_STEP = 7;
 
 }
