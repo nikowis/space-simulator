@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class MovingEntity extends Entity {
 
-    private float lightYDist;
-
     protected float move_speed = 200;
     protected float turn_speed = 200;
     protected float jump_power = 100;
@@ -31,9 +29,8 @@ public class MovingEntity extends Entity {
         super(model, position, rotX, rotY, rotZ, scale);
     }
 
-    public MovingEntity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, List<Light> lights, float lightYDist) {
+    public MovingEntity(FullModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, List<Light> lights) {
         super(model, position, rotX, rotY, rotZ, scale, lights);
-        this.lightYDist = lightYDist;
     }
 
     public void move() {
@@ -42,7 +39,7 @@ public class MovingEntity extends Entity {
         checkTerrainBounds();
     }
 
-    private void performMove() {
+    protected void performMove() {
         float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
 
         super.increaseRotation(0, adjustedTurnSpeed, 0);
@@ -53,37 +50,10 @@ public class MovingEntity extends Entity {
         super.increasePosition(dx, 0, dz);
         upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
         super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-        if (this.lights != null) {
-            for (Light l : lights) {
-                l.getPosition().y = position.getY() + lightYDist;
-            }
-            moveCarLights();
-        }
         if (super.getPosition().y < TERRAIN_HEIGHT) {
             upwardsSpeed = 0;
             isInAir = false;
             super.getPosition().y = TERRAIN_HEIGHT;
-            if (this.lights != null) {
-                for (Light l : lights) {
-                    l.getPosition().y = TERRAIN_HEIGHT + lightYDist;
-                }
-            }
-        }
-    }
-
-    private void moveCarLights() {
-        if (lights.size() == 2) {
-            float alfaRad = (float) Math.toRadians(rotY);
-            float dx1 = (float) (flatPositionToLightDistance * Math.sin(alfaRad + betaRad));
-            float dz1 = (float) (flatPositionToLightDistance * Math.cos(alfaRad + betaRad));
-            float dx2 = (float) (flatPositionToLightDistance * Math.sin(alfaRad - betaRad));
-            float dz2 = (float) (flatPositionToLightDistance * Math.cos(alfaRad - betaRad));
-            Light l1 = lights.get(0);
-            Light l2 = lights.get(1);
-            l1.getPosition().x = position.x + dx1;
-            l1.getPosition().z = position.z + dz1;
-            l2.getPosition().x = position.x + dx2;
-            l2.getPosition().z = position.z + dz2;
         }
     }
 

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.config.Config;
 import pl.nikowis.entities.CameraManager;
+import pl.nikowis.entities.CarEntity;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingEntity;
@@ -118,7 +119,7 @@ public class MainGameLoop {
         carLights.add(new Light(new Vector3f(-4, 3, 13), new Vector3f(3, 3, 3), atenuation));
         carLights.add(new Light(new Vector3f(4, 3, 13), new Vector3f(3, 3, 3), atenuation));
 
-        MovingEntity carEntity = new MovingEntity(staticCarModel, new Vector3f(240, 0, 450), 0, 0, 0, 2, carLights, 3);
+        CarEntity carEntity = new CarEntity(staticCarModel, new Vector3f(240, 0, 450), 0, 0, 0, 2, carLights, 3);
 
         entities.add(stallEntity);
         entities.add(stallEntity2);
