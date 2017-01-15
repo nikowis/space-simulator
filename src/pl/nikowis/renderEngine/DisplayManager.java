@@ -7,14 +7,12 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+import pl.nikowis.config.Config;
 
 /**
  * Created by Nikodem on 12/22/2016.
  */
 public class DisplayManager {
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
-    private static final int FPS_CAP = 120;
 
     private static long lastFrameTime;
     private static float delta;
@@ -25,19 +23,19 @@ public class DisplayManager {
                 .withProfileCore(true);
 
         try {
-            Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+            Display.setDisplayMode(new DisplayMode(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT));
             Display.create(new PixelFormat(), attribs);
             Display.setTitle("Display");
         } catch (LWJGLException e) {
             e.printStackTrace();
         }
 
-        GL11.glViewport(0, 0, WIDTH, HEIGHT);
+        GL11.glViewport(0, 0, Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
         lastFrameTime = getCurrentTime();
     }
 
     public static void updateDisplay() {
-        Display.sync(FPS_CAP);
+        Display.sync(Config.FPS_CAP);
         Display.update();
         long currentFrameTime = getCurrentTime();
         delta = (currentFrameTime - lastFrameTime) / 1000f;
@@ -47,6 +45,7 @@ public class DisplayManager {
 
     /**
      * Calculates the time for last frame (useful for smooth time dependent object movement).
+     *
      * @return time in seconds
      */
     public static float getFrameTimeSeconds() {

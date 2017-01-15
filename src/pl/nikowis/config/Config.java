@@ -41,5 +41,19 @@ public class Config {
      */
     public static final boolean ALLOW_MULTI_JUMP = true;
 
+    /**
+     * Window width.
+     */
+    public static final int WINDOW_WIDTH = 1800;
+
+    /**
+     * Window height.
+     */
+    public static final int WINDOW_HEIGHT = 930;
+
+    /**
+     * Game FPS cap.
+     */
+    public static final int FPS_CAP = 120;
 
 }
