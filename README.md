@@ -10,6 +10,9 @@ The project goal was to present different shading and reflection models.
 * Run the project!
 
 ### Manual
+
+Car movement using arrow keys.
+
 #### Key bidings to change game settings :
  * N - turn off the textures
  * M - turn on the textures
