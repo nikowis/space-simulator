@@ -8,10 +8,10 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class TurningCamera extends Camera {
 
-    private MovingEntity movingEntity;
+    private Entity entity;
 
-    public TurningCamera(Vector3f position, float pitch, MovingEntity movingEntity) {
-        this.movingEntity = movingEntity;
+    public TurningCamera(Vector3f position, float pitch, Entity entity) {
+        this.entity = entity;
         this.position = position;
         this.pitch = pitch;
     }
@@ -23,9 +23,9 @@ public class TurningCamera extends Camera {
     }
 
     private void movePitch() {
-        float dx = movingEntity.getPosition().x - this.position.x;
-        float dz = movingEntity.getPosition().z - this.position.z;
-        float verticalDistance = this.getPosition().getY() - movingEntity.getPosition().getY();
+        float dx = entity.getPosition().x - this.position.x;
+        float dz = entity.getPosition().z - this.position.z;
+        float verticalDistance = this.getPosition().getY() - entity.getPosition().getY();
         double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
         double radianAngle = Math.atan(verticalDistance / horizontalDistance);
         float degreeAngle = (float) ((radianAngle / Math.PI) * 180);
@@ -33,8 +33,8 @@ public class TurningCamera extends Camera {
     }
 
     private void moveYaw() {
-        float horizontalDist = movingEntity.getPosition().x - this.position.x;
-        float verticalDist = movingEntity.getPosition().z - this.position.z;
+        float horizontalDist = entity.getPosition().x - this.position.x;
+        float verticalDist = entity.getPosition().z - this.position.z;
         double radianAngle = Math.atan(horizontalDist / verticalDist);
         float degreeAngle = (float) ((radianAngle / Math.PI) * 180);
         this.yaw = 180 - degreeAngle;

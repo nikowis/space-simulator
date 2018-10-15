@@ -11,11 +11,11 @@ public class ThirdPersonCamera extends Camera {
     private float distanceFromEntity = 50;
     private float angleAroundEntity = 0;
 
-    private MovingEntity movingEntity;
+    private Entity entity;
 
-    public ThirdPersonCamera(MovingEntity movingEntity) {
+    public ThirdPersonCamera(Entity entity) {
         pitch = 20;
-        this.movingEntity = movingEntity;
+        this.entity = entity;
     }
 
     public void move() {
@@ -28,13 +28,13 @@ public class ThirdPersonCamera extends Camera {
     }
 
     private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
-        float theta = movingEntity.getRotY() + angleAroundEntity;
+        float theta = entity.getRotY() + angleAroundEntity;
         float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
         float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
-        position.x = movingEntity.getPosition().x - offsetX;
-        position.z = movingEntity.getPosition().z - offsetZ;
-        position.y = movingEntity.getPosition().y + verticalDistance;
-        this.yaw = 180 - (movingEntity.getRotY() + angleAroundEntity);
+        position.x = entity.getPosition().x - offsetX;
+        position.z = entity.getPosition().z - offsetZ;
+        position.y = entity.getPosition().y + verticalDistance;
+        this.yaw = 180 - (entity.getRotY() + angleAroundEntity);
     }
 
     private float calculateHorizontalDistance() {

@@ -6,7 +6,7 @@ The project goal was to present different shading and reflection models.
 * Download the project
 * In NetBeans create a new project using the "Java project with existing sources" template (select all source files)
 * In the project Properties -> Libraries -> Compile tab : add jars from the /lib/jars/
-* In the project Properties -> Run : select the Main class ( pl.nikowis.engineTester.MainGameLoop ) and add " -Djava.library.path=lib/natives" to VM Options
+* In the project Properties -> Run : select the Main class ( pl.nikowis.MainGameLoop ) and add " -Djava.library.path=lib/natives" to VM Options
 * Run the project!
 
 ### Manual

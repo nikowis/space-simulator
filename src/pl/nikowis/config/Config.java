@@ -56,4 +56,7 @@ public class Config {
      */
     public static final int FPS_CAP = 120;
 
+    public static final String WINDOW_TITLE = "Space";
+    
+    public static boolean ALLOW_JUMP = false;
 }
