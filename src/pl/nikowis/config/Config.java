@@ -32,11 +32,6 @@ public class Config {
     public static final int TERRAIN_VERTEX_COUNT = 150;
 
     /**
-     * Tree map outline step.
-     */
-    public static final int TREE_OUTLINE_STEP = 7;
-
-    /**
      * If multi jump should be allowed.
      */
     public static final boolean ALLOW_MULTI_JUMP = true;
@@ -57,6 +52,7 @@ public class Config {
     public static final int FPS_CAP = 120;
 
     public static final String WINDOW_TITLE = "Space";
-    
+
     public static boolean ALLOW_JUMP = false;
+
 }

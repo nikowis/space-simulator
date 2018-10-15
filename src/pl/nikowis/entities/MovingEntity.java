@@ -36,7 +36,6 @@ public class MovingEntity extends Entity {
     public void move() {
         checkInputs();
         performMove();
-        checkTerrainBounds();
     }
 
     protected void performMove() {
@@ -79,23 +78,8 @@ public class MovingEntity extends Entity {
             this.currentTurnSpeed = 0;
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_SPACE) && (Config.ALLOW_MULTI_JUMP || !isInAir)) {
+        if (Config.ALLOW_JUMP && Keyboard.isKeyDown(Keyboard.KEY_SPACE) && (Config.ALLOW_MULTI_JUMP || !isInAir)) {
             jump();
-        }
-    }
-
-    protected void checkTerrainBounds() {
-        if (this.getPosition().x < 0) {
-            this.getPosition().x = 0;
-        }
-        if (this.getPosition().z < 0) {
-            this.getPosition().z = 0;
-        }
-        if (this.getPosition().x > Config.TERRAIN_SIZE) {
-            this.getPosition().x = Config.TERRAIN_SIZE;
-        }
-        if (this.getPosition().z > Config.TERRAIN_SIZE) {
-            this.getPosition().z = Config.TERRAIN_SIZE;
         }
     }
 
