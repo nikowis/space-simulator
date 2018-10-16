@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.models.FullModel;
-import pl.nikowis.shaders.StaticShader;
+import pl.nikowis.shaders.statik.StaticShader;
 import pl.nikowis.textures.ModelTexture;
 import pl.nikowis.toolbox.Maths;
 

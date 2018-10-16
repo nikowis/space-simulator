@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.models.RawModel;
-import pl.nikowis.shaders.TerrainShader;
+import pl.nikowis.shaders.terrain.TerrainShader;
 import pl.nikowis.terrains.Terrain;
 import pl.nikowis.textures.TerrainTexturePack;
 import pl.nikowis.toolbox.Maths;

@@ -72,13 +72,13 @@ public class Loader {
         return vaoID;
     }
 
-    private void storeDataInAttributeList(int attirbuteNumber, int coordinateSize, float[] data) {
+    private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
         int vboId = GL15.glGenBuffers();
         vbos.add(vboId);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
         FloatBuffer buffer = storeDataInFloatButter(data);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(attirbuteNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
