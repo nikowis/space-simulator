@@ -11,8 +11,8 @@ public class FullModel {
 
     private RawModel rawModel;
     private ModelTexture texture;
-    private float shineDamper = 1;
-    private float reflectivity = 0;
+    private float shineDamper = 100;
+    private float reflectivity = 1;
     private Vector3f defaultColour;
 
     /**

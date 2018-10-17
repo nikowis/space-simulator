@@ -100,7 +100,7 @@ public class MasterRenderer {
         if (batch != null) {
             batch.add(entity);
         } else {
-            List<Entity> newBatch = new ArrayList<Entity>();
+            List<Entity> newBatch = new ArrayList<>();
             newBatch.add(entity);
             entities.put(entityModel, newBatch);
         }
