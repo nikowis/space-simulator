@@ -9,10 +9,9 @@ import pl.nikowis.entities.Camera;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.models.FullModel;
+import pl.nikowis.shaders.naked.NakedShader;
 import pl.nikowis.shaders.statik.StaticShader;
 import pl.nikowis.shaders.terrain.TerrainShader;
-import pl.nikowis.shaders.naked.FlatShader;
-import pl.nikowis.shaders.naked.NonFlatShader;
 import pl.nikowis.terrains.Terrain;
 
 import java.util.ArrayList;
@@ -30,10 +29,6 @@ public class MasterRenderer {
      * Controls rendering mode ( naked or textured ).
      */
     private boolean nakedMode = true;
-    private boolean phongShadingModel = true;
-    private boolean gouraudShadingModel = false;
-    private boolean phongReflectionModel = true;
-    private boolean blinnReflectionModel = false;
 
     private Matrix4f projectionMatrix;
 
@@ -42,10 +37,9 @@ public class MasterRenderer {
     private NakedRenderer nakedRenderer;
     private StaticShader staticShader = new StaticShader();
     private TerrainShader terrainShader = new TerrainShader();
-    private NonFlatShader nonFlatShader = new NonFlatShader();
-    private FlatShader flatShader = new FlatShader();
+    private NakedShader nakedShader = new NakedShader();
 
-    private Map<FullModel, List<Entity>> entities = new HashMap<FullModel, List<Entity>>();
+    private Map<FullModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();
 
     public MasterRenderer() {
@@ -54,9 +48,7 @@ public class MasterRenderer {
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-        nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
-        nonFlatShader.loadPhongGouardShading(true, false);
-        nonFlatShader.loadPhongBlinnReflection(true, false);
+        nakedRenderer = new NakedRenderer(nakedShader, projectionMatrix);
     }
 
     /**
@@ -82,8 +74,6 @@ public class MasterRenderer {
             nakedRenderer.getShader().start();
             nakedRenderer.getShader().loadLights(lights);
             nakedRenderer.getShader().loadViewMatrix(camera);
-            nakedRenderer.getShader().loadPhongGouardShading(phongShadingModel, gouraudShadingModel);
-            nakedRenderer.getShader().loadPhongBlinnReflection(phongReflectionModel, blinnReflectionModel);
             nakedRenderer.render(entities);
             nakedRenderer.render(terrains);
             nakedRenderer.getShader().stop();
@@ -122,8 +112,7 @@ public class MasterRenderer {
     public void cleanUp() {
         staticShader.cleanUp();
         terrainShader.cleanUp();
-        nonFlatShader.cleanUp();
-        flatShader.cleanUp();
+        nakedShader.cleanUp();
     }
 
 
@@ -160,30 +149,6 @@ public class MasterRenderer {
         } else if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
             if (nakedMode) {
                 nakedMode = false;
-            }
-        }
-        if (nakedMode) {
-            if (Keyboard.isKeyDown(Keyboard.KEY_F)) {
-                nakedRenderer = new NakedRenderer(flatShader, projectionMatrix);
-            } else if (Keyboard.isKeyDown(Keyboard.KEY_G)) {
-                phongShadingModel = false;
-                gouraudShadingModel = true;
-                nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
-            } else if (Keyboard.isKeyDown(Keyboard.KEY_H)) {
-                phongShadingModel = true;
-                gouraudShadingModel = false;
-                nakedRenderer = new NakedRenderer(nonFlatShader, projectionMatrix);
-            }
-
-            if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-                phongReflectionModel = true;
-                blinnReflectionModel = false;
-            } else if (Keyboard.isKeyDown(Keyboard.KEY_O)) {
-                phongReflectionModel = false;
-                blinnReflectionModel = true;
-            } else if (Keyboard.isKeyDown(Keyboard.KEY_I)) {
-                phongReflectionModel = false;
-                blinnReflectionModel = false;
             }
         }
     }
