@@ -32,11 +32,6 @@ public class Config {
     public static final int TERRAIN_VERTEX_COUNT = 150;
 
     /**
-     * If multi jump should be allowed.
-     */
-    public static final boolean ALLOW_MULTI_JUMP = true;
-
-    /**
      * Window width.
      */
     public static final int WINDOW_WIDTH = 1800;
@@ -53,6 +48,5 @@ public class Config {
 
     public static final String WINDOW_TITLE = "Space";
 
-    public static boolean ALLOW_JUMP = false;
 
 }

@@ -30,13 +30,6 @@ public class MovingEntityWithLights extends MovingEntity {
             }
             moveLights();
         }
-        if (super.getPosition().y < TERRAIN_HEIGHT) {
-            if (this.lights != null) {
-                for (Light l : lights) {
-                    l.getPosition().y = TERRAIN_HEIGHT + lightYDist;
-                }
-            }
-        }
     }
 
     private void moveLights() {
