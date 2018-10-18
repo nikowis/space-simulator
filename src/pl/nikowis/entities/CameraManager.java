@@ -39,7 +39,7 @@ public class CameraManager {
             currentCamera = staticCamera;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
             currentCamera = thirdPersonCamera;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_3)) {
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_3) && turningCamera != null) {
             currentCamera = turningCamera;
         }
     }

@@ -44,7 +44,7 @@ public class MainGameLoop {
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
-        Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(600, 100, 600), 0, 0, 0, 200);
+        Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(400, 0, 400), 0, 0, 0, 200);
         entities.add(sphereEntity);
         List<Light> lights = new ArrayList<>();
         Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
@@ -62,15 +62,16 @@ public class MainGameLoop {
         //####################################################################
 
         //###############################   CAMERAS  #########################
-        StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 50, 0), 10);
+        StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 150, 0), 10);
         staticCamera.setYaw(130);
-        MovingCamera movingCamera = new MovingCamera(new Vector3f(50,50,50), new Vector3f(0, 33, 0));
-        TurningCamera turningCamera = new TurningCamera(new Vector3f(0, 50, 0), 10, sphereEntity);
-        CameraManager cameraManager = new CameraManager(staticCamera, movingCamera, turningCamera);
+        MovingCamera movingCamera = new MovingCamera(new Vector3f(0, 150, 0), new Vector3f(0, 50, 0));
+        movingCamera.setPitch(10);
+        movingCamera.setRoll(110);
+        CameraManager cameraManager = new CameraManager(staticCamera, movingCamera, null);
         //####################################################################
 
         MasterRenderer masterRenderer = new MasterRenderer();
-        masterRenderer.processTerrain(terrain);
+        //masterRenderer.processTerrain(terrain);
         for (Entity entity : entities) {
             masterRenderer.processEntity(entity);
         }
