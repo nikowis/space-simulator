@@ -8,10 +8,10 @@ import org.lwjgl.input.Mouse;
  */
 public class ThirdPersonCamera extends Camera {
 
-    private float distanceFromEntity = 50;
-    private float angleAroundEntity = 0;
+    protected float distanceFromEntity = 50;
+    protected float angleAroundEntity = 0;
 
-    private Entity entity;
+    protected Entity entity;
 
     public ThirdPersonCamera(Entity entity) {
         pitch = 20;

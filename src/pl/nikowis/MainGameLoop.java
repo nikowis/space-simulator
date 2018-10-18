@@ -5,9 +5,9 @@ import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.entities.CameraManager;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
+import pl.nikowis.entities.MovingCamera;
 import pl.nikowis.entities.MovingEntity;
 import pl.nikowis.entities.StaticCamera;
-import pl.nikowis.entities.ThirdPersonCamera;
 import pl.nikowis.entities.TurningCamera;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.renderEngine.DisplayManager;
@@ -45,7 +45,7 @@ public class MainGameLoop {
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
-        MovingEntity boxEntity = new MovingEntity(staticBoxModel, new Vector3f(100, 3, 100), 0, 33, 0, 3);
+        Entity boxEntity = new Entity(staticBoxModel, new Vector3f(100, 3, 100), 0, 33, 0, 3);
         entities.add(boxEntity);
         entities.add(new Entity(staticSphereModel, new Vector3f(200, 20, 200), 0, 33, 0, 10));
         List<Light> lights = new ArrayList<>();
@@ -66,9 +66,10 @@ public class MainGameLoop {
         //###############################   CAMERAS  #########################
         StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 50, 0), 10);
         staticCamera.setYaw(130);
-        ThirdPersonCamera thirdPersonCamera = new ThirdPersonCamera(boxEntity);
+//        ThirdPersonCamera thirdPersonCamera = new ThirdPersonCamera(boxEntity);
+        MovingCamera movingCamera = new MovingCamera(new Vector3f(50,50,50), new Vector3f(0, 33, 0));
         TurningCamera turningCamera = new TurningCamera(new Vector3f(0, 50, 0), 10, boxEntity);
-        CameraManager cameraManager = new CameraManager(staticCamera, thirdPersonCamera, turningCamera);
+        CameraManager cameraManager = new CameraManager(staticCamera, movingCamera, turningCamera);
         //####################################################################
 
         MasterRenderer masterRenderer = new MasterRenderer();
@@ -80,7 +81,6 @@ public class MainGameLoop {
         while (!Display.isCloseRequested()) {
             cameraManager.checkInput();
             cameraManager.moveCurrentCamera();
-            boxEntity.move();
             masterRenderer.checkInput();
             masterRenderer.render(lights, cameraManager.getCurrentCamera());
             DisplayManager.updateDisplay();
