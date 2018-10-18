@@ -1,5 +1,7 @@
 package pl.nikowis.config;
 
+import org.lwjgl.util.vector.Vector3f;
+
 /**
  * Class containing global variables of the program.
  * Created by Nikodem on 12/30/2016.
@@ -48,5 +50,6 @@ public class Config {
 
     public static final String WINDOW_TITLE = "Space";
 
+    public static final Vector3f BCKGRND = new Vector3f(0.01f,  0.01f, 0.05f);
 
 }

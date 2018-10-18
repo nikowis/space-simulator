@@ -119,7 +119,7 @@ public class MasterRenderer {
     private void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(0.8f, 1, 1, 1);
+        GL11.glClearColor(Config.BCKGRND.x,Config.BCKGRND.y,Config.BCKGRND.z, 1);
     }
 
     private void createProjectionMatrix() {
