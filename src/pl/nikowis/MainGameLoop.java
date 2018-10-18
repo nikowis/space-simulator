@@ -39,15 +39,13 @@ public class MainGameLoop {
         Loader loader = new Loader();
 
         //###############################   MODELS  ##########################
-        FullModel staticBoxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
         FullModel staticSphereModel = new FullModel(OBJLoader.loadObjModel("sphere", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
         //####################################################################
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
-        Entity boxEntity = new Entity(staticBoxModel, new Vector3f(100, 3, 100), 0, 33, 0, 3);
-        entities.add(boxEntity);
-        entities.add(new Entity(staticSphereModel, new Vector3f(200, 20, 200), 0, 33, 0, 10));
+        Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(600, 100, 600), 0, 0, 0, 200);
+        entities.add(sphereEntity);
         List<Light> lights = new ArrayList<>();
         Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
         lights.add(sunLight);
@@ -60,15 +58,14 @@ public class MainGameLoop {
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("rock"));
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.3f, 0.3f, 0.3f));
+        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.8f, 0.8f, 0.8f));
         //####################################################################
 
         //###############################   CAMERAS  #########################
         StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 50, 0), 10);
         staticCamera.setYaw(130);
-//        ThirdPersonCamera thirdPersonCamera = new ThirdPersonCamera(boxEntity);
         MovingCamera movingCamera = new MovingCamera(new Vector3f(50,50,50), new Vector3f(0, 33, 0));
-        TurningCamera turningCamera = new TurningCamera(new Vector3f(0, 50, 0), 10, boxEntity);
+        TurningCamera turningCamera = new TurningCamera(new Vector3f(0, 50, 0), 10, sphereEntity);
         CameraManager cameraManager = new CameraManager(staticCamera, movingCamera, turningCamera);
         //####################################################################
 
