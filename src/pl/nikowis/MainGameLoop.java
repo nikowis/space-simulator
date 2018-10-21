@@ -40,15 +40,17 @@ public class MainGameLoop {
 
         //###############################   MODELS  ##########################
         FullModel staticSphereModel = new FullModel(OBJLoader.loadObjModel("sphere", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
-        FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
+        FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.12f, 0.1f));
         //####################################################################
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
         Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(400, 0, 400), 0, 0, 0, 200);
-        Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(200, 100, 200), 0, 0, 0, 200);
-        //entities.add(sphereEntity);
+        Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(300, 80, 200), 0, 50, 50, 30);
+        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(170, 120, 200), 0, 130, 50, 30);
+        entities.add(sphereEntity);
         entities.add(satelliteEntity);
+        entities.add(satelliteEntity2);
         List<Light> lights = new ArrayList<>();
         Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
         lights.add(sunLight);
