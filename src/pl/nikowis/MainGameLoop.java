@@ -6,9 +6,7 @@ import pl.nikowis.entities.CameraManager;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingCamera;
-import pl.nikowis.entities.MovingEntity;
 import pl.nikowis.entities.StaticCamera;
-import pl.nikowis.entities.TurningCamera;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
@@ -45,15 +43,17 @@ public class MainGameLoop {
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
+        Light light = new Light(new Vector3f(0,0,0), new Vector3f(0.1f, 0.1f, 0.9f), atenuation);
+
         Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(400, 0, 400), 0, 0, 0, 200);
-        Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(300, 80, 200), 0, 50, 50, 30);
-        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(170, 120, 200), 0, 130, 50, 30);
+        Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(300, 80, 250), 0, 50, 50, 30, light);
+        Light light2 = new Light(new Vector3f(0,0,0), new Vector3f(0.1f, 0.8f, 0.1f), atenuation);
+        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(250, 100, 350), 0, 130, 50, 30, light2);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
         entities.add(satelliteEntity2);
-        List<Light> lights = new ArrayList<>();
-        Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
-        lights.add(sunLight);
+
+        List<Light> lights = setupLights(entities);
         //####################################################################
 
         //###############################   TERRAIN  #########################
@@ -94,4 +94,16 @@ public class MainGameLoop {
         DisplayManager.closeDisplay();
     }
 
+    private static List<Light> setupLights(List<Entity> entities) {
+        List<Light> lights = new ArrayList<>();
+        Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
+        lights.add(sunLight);
+        for (int i = 0; i < entities.size(); i++) {
+            Entity en = entities.get(i);
+            if (en.getLights() != null) {
+                lights.addAll(en.getLights());
+            }
+        }
+        return lights;
+    }
 }
