@@ -45,10 +45,10 @@ public class MainGameLoop {
         List<Entity> entities = new ArrayList<>();
         Light light = new Light(new Vector3f(0,0,0), new Vector3f(0.1f, 0.1f, 0.9f), atenuation);
 
-        Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(400, 0, 400), 0, 0, 0, 200);
-        Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(300, 80, 250), 0, 50, 50, 30, light);
+        Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(0, 0, 500), 0, 0, 0, 200);
+        Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(0, 80, 300), 0, 50, 50, 30, light);
         Light light2 = new Light(new Vector3f(0,0,0), new Vector3f(0.1f, 0.8f, 0.1f), atenuation);
-        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(250, 100, 350), 0, 130, 50, 30, light2);
+        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(-100, 100, 300), 0, 130, 50, 30, light2);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
         entities.add(satelliteEntity2);
@@ -67,9 +67,9 @@ public class MainGameLoop {
         //####################################################################
 
         //###############################   CAMERAS  #########################
-        StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 150, 0), 10);
+        StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 0, 0), 10);
         staticCamera.setYaw(130);
-        MovingCamera movingCamera = new MovingCamera(new Vector3f(0, 150, 0), new Vector3f(0, 50, 0));
+        MovingCamera movingCamera = new MovingCamera(new Vector3f(0, 150, 0), new Vector3f(0, 0, 0));
         movingCamera.setPitch(10);
         movingCamera.setRoll(110);
         CameraManager cameraManager = new CameraManager(staticCamera, movingCamera, null);

@@ -24,7 +24,7 @@ public class CameraManager {
         this.staticCamera = staticCamera;
         this.thirdPersonCamera = thirdPersonCamera;
         this.turningCamera = turningCamera;
-        currentCamera = staticCamera;
+        currentCamera = thirdPersonCamera;
     }
 
     public void moveCurrentCamera() {
