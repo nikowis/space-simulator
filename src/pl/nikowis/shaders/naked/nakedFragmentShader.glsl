@@ -8,8 +8,11 @@ in vec3 toCameraVector;
 
 out vec4 out_Color;
 
+uniform vec3 lightPosition[lightsCount];
 uniform vec3 lightColour[lightsCount];
 uniform vec3 attenuation[lightsCount];
+uniform float coneAngle[lightsCount];
+uniform vec3 coneDirection[lightsCount];
 uniform float shineDamper;
 uniform float reflectivty;
 uniform vec3 baseColour;
@@ -23,18 +26,23 @@ void main(void){
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular = vec3(0.0);
     for(int i=0;i<lightsCount;i++) {
-            float distance = length(toLightVector[i]);
-            float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance *distance);
+            vec3 surfaceToLight = normalize(lightPosition[i]);
             vec3 unitToLightVector = normalize(toLightVector[i]);
-            float nDot1 = dot(unitNormal, unitToLightVector);
-            float brightness = max(nDot1, 0.0);
-            totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
             vec3 lightDirection = -unitToLightVector;
             vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-            float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
-            specularFactor = max(specularFactor, 0.0);
-            float dampedFactor = pow(specularFactor, shineDamper);
-            totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+            float lightToSurfaceAngle = degrees(acos(dot(lightDirection, normalize(coneDirection[i]))));
+            if(lightToSurfaceAngle < coneAngle[i]){
+                float distance = length(toLightVector[i]);
+                float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance *distance);
+
+                float nDot1 = dot(unitNormal, unitToLightVector);
+                float brightness = max(nDot1, 0.0);
+                totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
+                float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+                specularFactor = max(specularFactor, 0.0);
+                float dampedFactor = pow(specularFactor, shineDamper);
+                totalSpecular = totalSpecular + (dampedFactor * reflectivty * lightColour[i])/attFactor;
+            }
     }
     totalDiffuse = max(totalDiffuse, 0.2);
     out_Color = vec4(totalDiffuse, 1.0) * colour ;

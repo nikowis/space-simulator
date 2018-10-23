@@ -16,6 +16,8 @@ uniform vec3 lightPosition[lightsCount];
 
 uniform vec3 lightColour[lightsCount];
 uniform vec3 attenuation[lightsCount];
+uniform float coneAngle[lightsCount];
+uniform vec3 coneDirection[lightsCount];
 uniform float shineDamper;
 uniform float reflectivty;
 uniform vec3 baseColour;

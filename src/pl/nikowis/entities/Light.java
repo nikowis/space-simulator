@@ -10,6 +10,8 @@ public class Light {
     private Vector3f position;
     private Vector3f colour;
     private Vector3f attenuation = new Vector3f(1, 0, 0);
+    private float coneAngle = 180f;
+    private Vector3f coneDirection = new Vector3f(1, 0, 0);
 
     public Light(Vector3f position, Vector3f colour) {
         this.position = position;
@@ -46,5 +48,21 @@ public class Light {
 
     public void setColour(Vector3f colour) {
         this.colour = colour;
+    }
+
+    public float getConeAngle() {
+        return coneAngle;
+    }
+
+    public void setConeAngle(float coneAngle) {
+        this.coneAngle = coneAngle;
+    }
+
+    public Vector3f getConeDirection() {
+        return coneDirection;
+    }
+
+    public void setConeDirection(Vector3f coneDirection) {
+        this.coneDirection = coneDirection;
     }
 }

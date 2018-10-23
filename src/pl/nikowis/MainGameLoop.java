@@ -26,9 +26,15 @@ import java.util.List;
  */
 public class MainGameLoop {
 
+    private static final Vector3f[] SUN_COLORS = new Vector3f[] {
+            new Vector3f(0.4f,0,0),
+            new Vector3f(0,0.4f,0),
+            new Vector3f(0,0,0.4f),
+            new Vector3f(0.4f, 0.4f, 0.4f),
+    };
     private static float atBaseFact = 1;
     private static float atDistFact = 0f;
-    private static float atDistSquareFact = 0.001f;
+    private static float atDistSquareFact = 0.0001f;
     private static Vector3f atenuation = new Vector3f(atBaseFact, atDistFact, atDistSquareFact);
 
     public static void main(String[] args) {
@@ -43,17 +49,20 @@ public class MainGameLoop {
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
-        Light light = new Light(new Vector3f(0,0,0), new Vector3f(0.1f, 0.1f, 0.9f), atenuation);
-
+        Light light = new Light(new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.9f), atenuation);
+        light.setConeAngle(20);
+        light.setConeDirection(new Vector3f(0.2f, 0.2f,1f));
         Entity sphereEntity = new Entity(staticSphereModel, new Vector3f(0, 0, 500), 0, 0, 0, 200);
         Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(0, 80, 300), 0, 50, 50, 30, light);
-        Light light2 = new Light(new Vector3f(0,0,0), new Vector3f(0.1f, 0.8f, 0.1f), atenuation);
-        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(-100, 100, 300), 0, 130, 50, 30, light2);
+        Light light2 = new Light(new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.8f, 0.1f), atenuation);
+        light2.setConeAngle(20);
+        light2.setConeDirection(new Vector3f(0.7f, 0.2f,1f));
+        Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(-100, 100, 300), 0, 90, 50, 30, light2);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
         entities.add(satelliteEntity2);
-
-        List<Light> lights = setupLights(entities);
+        Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
+        List<Light> lights = setupLights(entities, sunLight);
         //####################################################################
 
         //###############################   TERRAIN  #########################
@@ -81,7 +90,14 @@ public class MainGameLoop {
             masterRenderer.processEntity(entity);
         }
 
+        int i = 0;
+        int j = 0;
         while (!Display.isCloseRequested()) {
+            i++;
+            if(i % 150 == 0) {
+                j++;
+                sunLight.setColour(SUN_COLORS[j % SUN_COLORS.length]);
+            }
             cameraManager.checkInput();
             cameraManager.moveCurrentCamera();
             masterRenderer.checkInput();
@@ -94,9 +110,9 @@ public class MainGameLoop {
         DisplayManager.closeDisplay();
     }
 
-    private static List<Light> setupLights(List<Entity> entities) {
+    private static List<Light> setupLights(List<Entity> entities, Light sunLight) {
         List<Light> lights = new ArrayList<>();
-        Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
+
         lights.add(sunLight);
         for (int i = 0; i < entities.size(); i++) {
             Entity en = entities.get(i);

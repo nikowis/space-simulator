@@ -38,6 +38,8 @@ public abstract class ShaderProgram {
     protected int location_lightPosition[];
     protected int location_lightColour[];
     protected int location_attenuation[];
+    protected int location_coneAngle[];
+    protected int location_coneDirection[];
     protected int location_shineDamper;
     protected int location_reflectivity;
 
@@ -87,10 +89,14 @@ public abstract class ShaderProgram {
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
         location_attenuation = new int[MAX_LIGHTS];
+        location_coneAngle = new int[MAX_LIGHTS];
+        location_coneDirection = new int[MAX_LIGHTS];
         for (int i = 0; i < MAX_LIGHTS; i++) {
             location_lightPosition[i] = getUniformLocation("lightPosition[" + i + "]");
             location_lightColour[i] = getUniformLocation("lightColour[" + i + "]");
             location_attenuation[i] = getUniformLocation("attenuation[" + i + "]");
+            location_coneAngle[i] = getUniformLocation("coneAngle[" + i + "]");
+            location_coneDirection[i] = getUniformLocation("coneDirection[" + i + "]");
         }
     }
 
@@ -207,16 +213,21 @@ public abstract class ShaderProgram {
      * @param lights list of lights with position, colour and attenuation(optional).
      */
     public void loadLights(List<Light> lights) {
+        Vector3f zeros = new Vector3f(0, 0, 0);
         for (int i = 0; i < MAX_LIGHTS; i++) {
             if (i < lights.size()) {
                 loadVector(location_lightPosition[i], lights.get(i).getPosition());
                 loadVector(location_lightColour[i], lights.get(i).getColour());
                 loadVector(location_attenuation[i], lights.get(i).getAttenuation());
+                loadFloat(location_coneAngle[i], lights.get(i).getConeAngle());
+                loadVector(location_coneDirection[i], lights.get(i).getConeDirection());
             } else {
                 //filling black lights for the remaining slots
-                loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
-                loadVector(location_lightColour[i], new Vector3f(0, 0, 0));
+                loadVector(location_lightPosition[i], zeros);
+                loadVector(location_lightColour[i], zeros);
                 loadVector(location_attenuation[i], new Vector3f(1, 0, 0));
+                loadFloat(location_coneAngle[i], 180f);
+                loadVector(location_coneDirection[i], zeros);
             }
         }
     }
