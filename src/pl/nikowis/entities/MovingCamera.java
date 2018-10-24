@@ -11,16 +11,21 @@ import pl.nikowis.renderEngine.DisplayManager;
  */
 public class MovingCamera extends Camera {
 
-    protected float distanceFromEntity = 50;
-    protected float angleAroundEntity = 0;
+    private float distanceFromEntity = 50;
+    private float angleAroundEntity = 0;
 
-    protected float move_speed = 200;
-    protected float side_speed = 200;
-    protected float currentSpeed = 0;
-    protected float currentSideSpeed = 0;
+    private float MOVE_SPEED =  200;
+    private float SIDE_SPEED = 200;
+    private float TURN_SPEED = 200;
+    private float UP_DOWN_SPEED = 200;
 
-    protected Vector3f followedPoint;
-    protected float rotX, rotY, rotZ;
+    private float currentSpeed = 0;
+    private float currentSideSpeed = 0;
+    private float currentTurnSpeed = 0;
+    private float currentUpDownSpeed = 0;
+
+    private Vector3f followedPoint;
+    private float rotX, rotY, rotZ;
 
     public MovingCamera(Vector3f position) {
         this.position = position;
@@ -78,50 +83,67 @@ public class MovingCamera extends Camera {
     }
 
 
-    public void increasePosition(float dx, float dy, float dz) {
+    private void increasePosition(float dx, float dy, float dz) {
         this.followedPoint.x += dx;
         this.followedPoint.y += dy;
         this.followedPoint.z += dz;
     }
 
-    public void increaseRotation(float dx, float dy, float dz) {
+    private void increaseRotation(float dx, float dy, float dz) {
         this.rotX += dx;
         this.rotY += dy;
         this.rotZ += dz;
     }
 
+   
+    private void performMove() {
+        float adjustedUpDownSpeed = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
+        this.increasePosition(0, adjustedUpDownSpeed, 0);
 
-    protected void performMove() {
-//        float adjustedTurnSpeed = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
-//
-//        this.increaseRotation(0, adjustedTurnSpeed, 0);
+        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+        this.increaseRotation(0, adjustedTurnSpeed, 0);
 
         float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
         float dx = (float) (WSdistance * Math.sin(Math.toRadians(rotY)));
-        float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotZ)));
+        float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotY)));
         float ADdistance = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
-        float dx2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY)));
-        float dz2 = (float) (ADdistance * Math.sin(Math.toRadians(rotZ)));
+        float dx2 = (float) (ADdistance * Math.sin(Math.toRadians(rotY + 90)));
+        float dz2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY + 90)));
 
         this.increasePosition(dx + dx2, 0, dz + dz2);
     }
 
-    protected void checkInputs() {
+    private void checkInputs() {
         if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            currentSpeed = +move_speed;
+            currentSpeed = +MOVE_SPEED;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            currentSpeed = -move_speed;
+            currentSpeed = -MOVE_SPEED;
         } else {
             this.currentSpeed = 0;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-            this.currentSideSpeed = -side_speed;
+            this.currentSideSpeed = -SIDE_SPEED;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            this.currentSideSpeed = side_speed;
+            this.currentSideSpeed = SIDE_SPEED;
         } else {
             this.currentSideSpeed = 0;
         }
 
+        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+            this.currentTurnSpeed = -TURN_SPEED;
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+            this.currentTurnSpeed = TURN_SPEED;
+        } else {
+            this.currentTurnSpeed = 0;
+        }
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            this.currentUpDownSpeed = -UP_DOWN_SPEED;
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            this.currentUpDownSpeed = UP_DOWN_SPEED;
+        } else {
+            this.currentUpDownSpeed = 0;
+        }
     }
 }
