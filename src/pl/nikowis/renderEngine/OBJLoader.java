@@ -16,6 +16,16 @@ import java.util.List;
  * Created by Nikodem on 12/25/2016.
  */
 public class OBJLoader {
+
+    public static final String VERTEX_PREFIX = "v ";
+    public static final String SPACE_SEPARATOR = " ";
+    public static final String TEXTURE_PREFIX = "vt ";
+    public static final String NORMAL_PREFIX = "vn ";
+    public static final String SLASH_SEPARATOR = "/";
+    public static final String FACE_PREFIX = "f ";
+    public static final String RESOURCES_PATH = "res/";
+    private static final String OBJ_EXTENSION = ".obj";
+
     /**
      * Reads the obj file and extracts all the data into a {@link RawModel}.
      * @param fileName name of the obj file ( without the extension ).
@@ -23,9 +33,9 @@ public class OBJLoader {
      * @return {@link RawModel} model
      */
     public static RawModel loadObjModel(String fileName, Loader loader) {
-        FileReader fr = null;
+        FileReader fr;
         try {
-            fr = new FileReader(new File("res/" + fileName + ".obj"));
+            fr = new FileReader(new File(RESOURCES_PATH + fileName + OBJ_EXTENSION));
         } catch (FileNotFoundException e) {
             System.err.println("Couln't load file!");
             e.printStackTrace();
@@ -33,54 +43,54 @@ public class OBJLoader {
         }
         BufferedReader reader = new BufferedReader(fr);
         String line;
-        List<Vector3f> vertices = new ArrayList<Vector3f>();
-        List<Vector3f> normals = new ArrayList<Vector3f>();
-        List<Vector2f> textures = new ArrayList<Vector2f>();
-        List<Integer> indices = new ArrayList<Integer>();
-        float[] verticesArray = null;
+        List<Vector3f> vertices = new ArrayList<>();
+        List<Vector3f> normals = new ArrayList<>();
+        List<Vector2f> textures = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
+        float[] verticesArray;
         float[] normalsArray = null;
         float[] textureArray = null;
-        int[] indicesArray = null;
+        int[] indicesArray;
 
         try {
             while (true) {
                 line = reader.readLine();
-                String[] currentLine = line.split(" ");
-                if (line.startsWith("v ")) {
+                String[] currentLine = line.split(SPACE_SEPARATOR);
+                if (line.startsWith(VERTEX_PREFIX)) {
                     Vector3f vertex = new Vector3f(
                             Float.parseFloat(currentLine[1])
                             , Float.parseFloat(currentLine[2])
                             , Float.parseFloat(currentLine[3])
                     );
                     vertices.add(vertex);
-                } else if (line.startsWith("vt ")) {
+                } else if (line.startsWith(TEXTURE_PREFIX)) {
                     Vector2f texture = new Vector2f(
                             Float.parseFloat(currentLine[1])
                             , Float.parseFloat(currentLine[2])
                     );
                     textures.add(texture);
-                } else if (line.startsWith("vn ")) {
+                } else if (line.startsWith(NORMAL_PREFIX)) {
                     Vector3f normal = new Vector3f(
                             Float.parseFloat(currentLine[1])
                             , Float.parseFloat(currentLine[2])
                             , Float.parseFloat(currentLine[3])
                     );
                     normals.add(normal);
-                } else if (line.startsWith("f ")) {
+                } else if (line.startsWith(FACE_PREFIX)) {
                     textureArray = new float[vertices.size() * 2];
                     normalsArray = new float[vertices.size() * 3];
                     break;
                 }
             }
             while (line != null) {
-                if (!line.startsWith("f ")) {
+                if (!line.startsWith(FACE_PREFIX)) {
                     line = reader.readLine();
                     continue;
                 }
-                String[] currentLine = line.split(" ");
-                String[] vertex1 = currentLine[1].split("/");
-                String[] vertex2 = currentLine[2].split("/");
-                String[] vertex3 = currentLine[3].split("/");
+                String[] currentLine = line.split(SPACE_SEPARATOR);
+                String[] vertex1 = currentLine[1].split(SLASH_SEPARATOR);
+                String[] vertex2 = currentLine[2].split(SLASH_SEPARATOR);
+                String[] vertex3 = currentLine[3].split(SLASH_SEPARATOR);
                 processVertex(vertex1, indices, textures, normals, textureArray, normalsArray);
                 processVertex(vertex2, indices, textures, normals, textureArray, normalsArray);
                 processVertex(vertex3, indices, textures, normals, textureArray, normalsArray);

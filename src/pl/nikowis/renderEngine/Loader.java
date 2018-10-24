@@ -8,12 +8,14 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import pl.nikowis.models.RawModel;
+import pl.nikowis.models.StaticModel;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,6 +38,21 @@ public class Loader {
      * @return
      */
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
+        int vaoID = createVAO();
+        binIndicesBuffer(indices);
+        storeDataInAttributeList(0, 3, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
+        storeDataInAttributeList(2, 3, normals);
+
+        unbindVAO();
+        return new RawModel(vaoID, indices.length);
+    }
+
+    public RawModel loadToVAO(StaticModel model) {
+        float[] positions = model.getPositions();
+        float[] textureCoords = model.getTextureCoords();
+        float[] normals = model.getNormals();
+        int[] indices = model.getIndices();
         int vaoID = createVAO();
         binIndicesBuffer(indices);
         storeDataInAttributeList(0, 3, positions);
