@@ -45,6 +45,7 @@ public class MainGameLoop {
         //###############################   MODELS  ##########################
         FullModel staticSphereModel = new FullModel(OBJLoader.loadObjModel("sphere", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
         FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.12f, 0.1f));
+        FullModel iglooModel = new FullModel(OBJLoader.loadObjModel("igloo", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.22f, 0.92f, 0.1f));
         //####################################################################
 
         //###############################   ENTITIES  ########################
@@ -58,9 +59,11 @@ public class MainGameLoop {
         light2.setConeAngle(20);
         light2.setConeDirection(new Vector3f(0.7f, 0.2f,1f));
         Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(-100, 100, 300), 0, 90, 50, 30, light2);
+        Entity iglooEntity = new Entity(iglooModel, new Vector3f(-77, 103, 370), -30, 300, 50, 30);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
         entities.add(satelliteEntity2);
+        entities.add(iglooEntity);
         Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
         List<Light> lights = setupLights(entities, sunLight);
         //####################################################################
