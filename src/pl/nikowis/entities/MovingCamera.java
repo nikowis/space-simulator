@@ -15,9 +15,9 @@ public class MovingCamera extends Camera {
     protected float angleAroundEntity = 0;
 
     protected float move_speed = 200;
-    protected float turn_speed = 200;
+    protected float side_speed = 200;
     protected float currentSpeed = 0;
-    protected float currentTurnSpeed = 0;
+    protected float currentSideSpeed = 0;
 
     protected Vector3f followedPoint;
     protected float rotX, rotY, rotZ;
@@ -92,31 +92,35 @@ public class MovingCamera extends Camera {
 
 
     protected void performMove() {
-        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+//        float adjustedTurnSpeed = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
+//
+//        this.increaseRotation(0, adjustedTurnSpeed, 0);
 
-        this.increaseRotation(0, adjustedTurnSpeed, 0);
+        float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+        float dx = (float) (WSdistance * Math.sin(Math.toRadians(rotY)));
+        float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotZ)));
+        float ADdistance = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
+        float dx2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY)));
+        float dz2 = (float) (ADdistance * Math.sin(Math.toRadians(rotZ)));
 
-        float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-        float dx = (float) (distance * Math.sin(Math.toRadians(rotY)));
-        float dz = (float) (distance * Math.cos(Math.toRadians(rotZ)));
-        this.increasePosition(dx, 0, dz);
+        this.increasePosition(dx + dx2, 0, dz + dz2);
     }
 
     protected void checkInputs() {
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
             currentSpeed = +move_speed;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
             currentSpeed = -move_speed;
         } else {
             this.currentSpeed = 0;
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            this.currentTurnSpeed = -turn_speed;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-            this.currentTurnSpeed = turn_speed;
+        if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+            this.currentSideSpeed = -side_speed;
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+            this.currentSideSpeed = side_speed;
         } else {
-            this.currentTurnSpeed = 0;
+            this.currentSideSpeed = 0;
         }
 
     }
