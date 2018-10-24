@@ -78,10 +78,10 @@ public class MainGameLoop {
         //###############################   CAMERAS  #########################
         StaticCamera staticCamera = new StaticCamera(new Vector3f(0, 0, 0), 10);
         staticCamera.setYaw(130);
-        MovingCamera movingCamera = new MovingCamera(new Vector3f(0, 150, 0), new Vector3f(0, 0, 0));
+        MovingCamera movingCamera = new MovingCamera(new Vector3f(0, 150, 0));
         movingCamera.setPitch(10);
         movingCamera.setRoll(110);
-        CameraManager cameraManager = new CameraManager(staticCamera, movingCamera, null);
+        CameraManager cameraManager = new CameraManager(staticCamera, movingCamera);
         //####################################################################
 
         MasterRenderer masterRenderer = new MasterRenderer();

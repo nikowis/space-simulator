@@ -1,6 +1,7 @@
 package pl.nikowis.entities;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.renderEngine.DisplayManager;
 
@@ -10,32 +11,95 @@ import pl.nikowis.renderEngine.DisplayManager;
  */
 public class MovingCamera extends Camera {
 
+    protected float distanceFromEntity = 50;
+    protected float angleAroundEntity = 0;
+
     protected float move_speed = 200;
     protected float turn_speed = 200;
-
     protected float currentSpeed = 0;
     protected float currentTurnSpeed = 0;
 
+    protected Vector3f followedPoint;
+    protected float rotX, rotY, rotZ;
+
     public MovingCamera(Vector3f position) {
         this.position = position;
+        this.followedPoint = new Vector3f(position.x + 20, position.y, position.z + 20);
         pitch = 20;
     }
 
-    @Override
     public void move() {
         checkInputs();
         performMove();
+        calculateZoom();
+        calculatePitch();
+        calculateAngleAroundEntity();
+        float horizontalDistance = calculateHorizontalDistance();
+        float verticalDistance = calculateVerticalDistance();
+        calculateCameraPosition(horizontalDistance, verticalDistance);
     }
+
+
+    private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
+        float theta = rotY + angleAroundEntity;
+        float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
+        float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+        position.x = followedPoint.x - offsetX;
+        position.z = followedPoint.z - offsetZ;
+        position.y = followedPoint.y + verticalDistance;
+        this.yaw = 180 - (rotY + angleAroundEntity);
+    }
+
+    private float calculateHorizontalDistance() {
+        return (float) (distanceFromEntity * Math.cos(Math.toRadians(pitch)));
+    }
+
+    private float calculateVerticalDistance() {
+        return (float) (distanceFromEntity * Math.sin(Math.toRadians(pitch)));
+    }
+
+    private void calculateZoom() {
+        float zoomLevel = Mouse.getDWheel() * 0.1f;
+        distanceFromEntity -= zoomLevel;
+    }
+
+    private void calculatePitch() {
+        if (Mouse.isButtonDown(1)) {
+            float pitchChange = Mouse.getDY() * 0.1f;
+            pitch -= pitchChange;
+        }
+    }
+
+    private void calculateAngleAroundEntity() {
+        if (Mouse.isButtonDown(0)) {
+            float angleChange = Mouse.getDX() * 0.3f;
+            angleAroundEntity -= angleChange;
+        }
+    }
+
+
+    public void increasePosition(float dx, float dy, float dz) {
+        this.followedPoint.x += dx;
+        this.followedPoint.y += dy;
+        this.followedPoint.z += dz;
+    }
+
+    public void increaseRotation(float dx, float dy, float dz) {
+        this.rotX += dx;
+        this.rotY += dy;
+        this.rotZ += dz;
+    }
+
 
     protected void performMove() {
         float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
 
-
+        this.increaseRotation(0, adjustedTurnSpeed, 0);
 
         float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
-        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
-        super.increasePosition(dx, 0, dz);
+        float dx = (float) (distance * Math.sin(Math.toRadians(rotY)));
+        float dz = (float) (distance * Math.cos(Math.toRadians(rotZ)));
+        this.increasePosition(dx, 0, dz);
     }
 
     protected void checkInputs() {

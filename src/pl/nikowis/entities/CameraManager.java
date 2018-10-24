@@ -9,22 +9,13 @@ import org.lwjgl.input.Keyboard;
 public class CameraManager {
     private Camera currentCamera;
 
-    private ThirdPersonCamera thirdPersonCamera;
-    private StaticCamera staticCamera;
-    private TurningCamera turningCamera;
+    private Camera firstCamera;
+    private Camera secondCamera;
 
-    /**
-     * Constructor.
-     *
-     * @param staticCamera      staticCamera
-     * @param thirdPersonCamera thirdPersonCamera
-     * @param turningCamera     turningCamera
-     */
-    public CameraManager(StaticCamera staticCamera, ThirdPersonCamera thirdPersonCamera, TurningCamera turningCamera) {
-        this.staticCamera = staticCamera;
-        this.thirdPersonCamera = thirdPersonCamera;
-        this.turningCamera = turningCamera;
-        currentCamera = thirdPersonCamera;
+    public CameraManager(Camera firstCamera, Camera secondCamera) {
+        this.firstCamera = firstCamera;
+        this.secondCamera = secondCamera;
+        currentCamera = firstCamera;
     }
 
     public void moveCurrentCamera() {
@@ -36,11 +27,9 @@ public class CameraManager {
      */
     public void checkInput() {
         if (Keyboard.isKeyDown(Keyboard.KEY_1)) {
-            currentCamera = staticCamera;
+            currentCamera = firstCamera;
         } else if (Keyboard.isKeyDown(Keyboard.KEY_2)) {
-            currentCamera = thirdPersonCamera;
-        } else if (Keyboard.isKeyDown(Keyboard.KEY_3) && turningCamera != null) {
-            currentCamera = turningCamera;
+            currentCamera = secondCamera;
         }
     }
 
