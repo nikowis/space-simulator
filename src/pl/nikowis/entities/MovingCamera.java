@@ -12,17 +12,18 @@ import pl.nikowis.renderEngine.DisplayManager;
 public class MovingCamera extends Camera {
 
     private float distanceFromEntity = 50;
-    private float angleAroundEntity = 0;
 
     private float MOVE_SPEED =  200;
     private float SIDE_SPEED = 200;
     private float TURN_SPEED = 200;
     private float UP_DOWN_SPEED = 200;
+    private float PITCH_SPEED = 25;
 
     private float currentSpeed = 0;
     private float currentSideSpeed = 0;
     private float currentTurnSpeed = 0;
     private float currentUpDownSpeed = 0;
+    private float currentPitchSpeed = 0;
 
     private Vector3f followedPoint;
     private float rotX, rotY, rotZ;
@@ -35,24 +36,35 @@ public class MovingCamera extends Camera {
 
     public void move() {
         checkInputs();
-        performMove();
+        movePosition();
+        calculateRotation();
         calculateZoom();
         calculatePitch();
-        calculateAngleAroundEntity();
+
         float horizontalDistance = calculateHorizontalDistance();
         float verticalDistance = calculateVerticalDistance();
         calculateCameraPosition(horizontalDistance, verticalDistance);
     }
 
+    private void calculateRotation() {
+        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+        this.increaseRotation(0, adjustedTurnSpeed, 0);
+    }
+
+    private void calculatePitch() {
+        float adjustedPitchSpeed = currentPitchSpeed * DisplayManager.getFrameTimeSeconds();
+        pitch += adjustedPitchSpeed;
+
+    }
+
 
     private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
-        float theta = rotY + angleAroundEntity;
-        float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
-        float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+        float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(rotY)));
+        float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(rotY)));
         position.x = followedPoint.x - offsetX;
         position.z = followedPoint.z - offsetZ;
         position.y = followedPoint.y + verticalDistance;
-        this.yaw = 180 - (rotY + angleAroundEntity);
+        this.yaw = 180 - rotY;
     }
 
     private float calculateHorizontalDistance() {
@@ -68,19 +80,6 @@ public class MovingCamera extends Camera {
         distanceFromEntity -= zoomLevel;
     }
 
-    private void calculatePitch() {
-        if (Mouse.isButtonDown(1)) {
-            float pitchChange = Mouse.getDY() * 0.1f;
-            pitch -= pitchChange;
-        }
-    }
-
-    private void calculateAngleAroundEntity() {
-        if (Mouse.isButtonDown(0)) {
-            float angleChange = Mouse.getDX() * 0.3f;
-            angleAroundEntity -= angleChange;
-        }
-    }
 
 
     private void increasePosition(float dx, float dy, float dz) {
@@ -96,13 +95,8 @@ public class MovingCamera extends Camera {
     }
 
    
-    private void performMove() {
-        float adjustedUpDownSpeed = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
-        this.increasePosition(0, adjustedUpDownSpeed, 0);
-
-        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
-        this.increaseRotation(0, adjustedTurnSpeed, 0);
-
+    private void movePosition() {
+        float dy = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
         float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
         float dx = (float) (WSdistance * Math.sin(Math.toRadians(rotY)));
         float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotY)));
@@ -110,7 +104,7 @@ public class MovingCamera extends Camera {
         float dx2 = (float) (ADdistance * Math.sin(Math.toRadians(rotY + 90)));
         float dz2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY + 90)));
 
-        this.increasePosition(dx + dx2, 0, dz + dz2);
+        this.increasePosition(dx + dx2, dy, dz + dz2);
     }
 
     private void checkInputs() {
@@ -136,6 +130,14 @@ public class MovingCamera extends Camera {
             this.currentTurnSpeed = TURN_SPEED;
         } else {
             this.currentTurnSpeed = 0;
+        }
+
+        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+            this.currentPitchSpeed = -PITCH_SPEED;
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+            this.currentPitchSpeed = PITCH_SPEED;
+        } else {
+            this.currentPitchSpeed = 0;
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
