@@ -25,44 +25,15 @@ public class MovingCamera extends Camera {
     private float currentUpDownSpeed = 0;
     private float currentPitchSpeed = 0;
 
-    private Vector3f followedPoint;
     private float rotX, rotY, rotZ;
 
     public MovingCamera(Vector3f position) {
         this.position = position;
-        this.followedPoint = new Vector3f(position.x + 20, position.y, position.z + 20);
         pitch = 20;
     }
 
     public void move() {
         checkInputs();
-        movePosition();
-
-        float zoomLevel = Mouse.getDWheel() * 0.1f;
-        distanceFromEntity -= zoomLevel;
-
-        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
-        this.increaseRotation(0, adjustedTurnSpeed, 0);
-
-        float adjustedPitchSpeed = currentPitchSpeed * DisplayManager.getFrameTimeSeconds();
-        pitch += adjustedPitchSpeed;
-        rotZ++;
-        float horizontalDistance = (float) (distanceFromEntity * Math.cos(Math.toRadians(pitch)));
-        float verticalDistance = (float) (distanceFromEntity * Math.sin(Math.toRadians(pitch)));
-        calculateCameraPosition(horizontalDistance, verticalDistance);
-    }
-
-
-    private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
-        float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(rotY)));
-        float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(rotY)));
-        position.x = followedPoint.x - offsetX;
-        position.z = followedPoint.z - offsetZ;
-        position.y = followedPoint.y + verticalDistance;
-        this.yaw = 180 - rotY;
-    }
-
-    private void movePosition() {
         float dy = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
         float dy2 =  (currentSpeed * DisplayManager.getFrameTimeSeconds()) * (float)Math.sin(Math.toRadians(pitch + 180));
         float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
@@ -71,14 +42,21 @@ public class MovingCamera extends Camera {
         float ADdistance = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
         float dx2 = (float) (ADdistance * Math.sin(Math.toRadians(rotY + 90)));
         float dz2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY + 90)));
-
         this.increasePosition(dx + dx2, dy + dy2, dz + dz2);
+
+        this.yaw = 180 - rotY;
+
+        float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
+        this.increaseRotation(0, adjustedTurnSpeed, 0);
+        float adjustedPitchSpeed = currentPitchSpeed * DisplayManager.getFrameTimeSeconds();
+        pitch += adjustedPitchSpeed;
+        rotZ++;
     }
 
     private void increasePosition(float dx, float dy, float dz) {
-        this.followedPoint.x += dx;
-        this.followedPoint.y += dy;
-        this.followedPoint.z += dz;
+        this.position.x += dx;
+        this.position.y += dy;
+        this.position.z += dz;
     }
 
     private void increaseRotation(float dx, float dy, float dz) {
