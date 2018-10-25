@@ -8,6 +8,7 @@ import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingCamera;
 import pl.nikowis.entities.StaticCamera;
 import pl.nikowis.models.FullModel;
+import pl.nikowis.models.RawModel;
 import pl.nikowis.models.StaticModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
@@ -45,9 +46,11 @@ public class MainGameLoop {
 
         //###############################   MODELS  ##########################
         FullModel sphereModel = new FullModel(loader.loadToVAO(new StaticModel.Sphere()), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
-        FullModel iglooModel = new FullModel(loader.loadToVAO(new StaticModel.Igloo()), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.22f, 0.92f, 0.1f));
+        FullModel iglooModel = new FullModel(loader.loadToVAO(new StaticModel.Igloo()), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.22f, 0.2f, 0.9f));
         FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.12f, 0.1f));
         FullModel boxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
+        RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
+        FullModel treeModel = new FullModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
         //####################################################################
 
         //###############################   ENTITIES  ########################
@@ -63,11 +66,13 @@ public class MainGameLoop {
         Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(-100, 100, 300), 0, 90, 50, 30, light2);
         Entity iglooEntity = new Entity(iglooModel, new Vector3f(-77, 103, 370), -30, 300, 50, 30);
         Entity boxEntity = new Entity(boxModel, new Vector3f(100, 80, 300), 0, 50, 50, 10);
+        Entity treeEntity = new Entity(treeModel, new Vector3f(100, 30, 240), 0, 50, 50, 10);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
         entities.add(satelliteEntity2);
         entities.add(iglooEntity);
         entities.add(boxEntity);
+        entities.add(treeEntity);
         Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
         List<Light> lights = setupLights(entities, sunLight);
         //####################################################################
