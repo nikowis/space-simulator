@@ -69,7 +69,6 @@ public class CameraTester {
         TurningCamera turningCamera = new TurningCamera(new Vector3f(0, 50, 0), 10, boxEntity);
         MovingCamera movingCamera = new MovingCamera(new Vector3f(50, 50, 50));
         movingCamera.setPitch(10);
-        movingCamera.setRoll(110);
         CameraManager cameraManager = new CameraManager(movingCamera, staticCamera);
         //####################################################################
 
