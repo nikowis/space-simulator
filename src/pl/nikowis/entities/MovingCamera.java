@@ -13,11 +13,11 @@ public class MovingCamera extends Camera {
 
     private float distanceFromEntity = 50;
 
-    private float MOVE_SPEED =  200;
+    private float MOVE_SPEED = 200;
     private float SIDE_SPEED = 200;
     private float TURN_SPEED = 200;
     private float UP_DOWN_SPEED = 200;
-    private float PITCH_SPEED = 25;
+    private float PITCH_SPEED = 50;
 
     private float currentSpeed = 0;
     private float currentSideSpeed = 0;
@@ -37,24 +37,19 @@ public class MovingCamera extends Camera {
     public void move() {
         checkInputs();
         movePosition();
-        calculateRotation();
-        calculateZoom();
-        calculatePitch();
 
-        float horizontalDistance = calculateHorizontalDistance();
-        float verticalDistance = calculateVerticalDistance();
-        calculateCameraPosition(horizontalDistance, verticalDistance);
-    }
+        float zoomLevel = Mouse.getDWheel() * 0.1f;
+        distanceFromEntity -= zoomLevel;
 
-    private void calculateRotation() {
         float adjustedTurnSpeed = currentTurnSpeed * DisplayManager.getFrameTimeSeconds();
         this.increaseRotation(0, adjustedTurnSpeed, 0);
-    }
 
-    private void calculatePitch() {
         float adjustedPitchSpeed = currentPitchSpeed * DisplayManager.getFrameTimeSeconds();
         pitch += adjustedPitchSpeed;
-
+        rotZ++;
+        float horizontalDistance = (float) (distanceFromEntity * Math.cos(Math.toRadians(pitch)));
+        float verticalDistance = (float) (distanceFromEntity * Math.sin(Math.toRadians(pitch)));
+        calculateCameraPosition(horizontalDistance, verticalDistance);
     }
 
 
@@ -67,20 +62,18 @@ public class MovingCamera extends Camera {
         this.yaw = 180 - rotY;
     }
 
-    private float calculateHorizontalDistance() {
-        return (float) (distanceFromEntity * Math.cos(Math.toRadians(pitch)));
+    private void movePosition() {
+        float dy = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
+        float dy2 =  (currentSpeed * DisplayManager.getFrameTimeSeconds()) * (float)Math.sin(Math.toRadians(pitch + 180));
+        float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+        float dx = (float) (WSdistance * Math.sin(Math.toRadians(rotY)));
+        float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotY)));
+        float ADdistance = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
+        float dx2 = (float) (ADdistance * Math.sin(Math.toRadians(rotY + 90)));
+        float dz2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY + 90)));
+
+        this.increasePosition(dx + dx2, dy + dy2, dz + dz2);
     }
-
-    private float calculateVerticalDistance() {
-        return (float) (distanceFromEntity * Math.sin(Math.toRadians(pitch)));
-    }
-
-    private void calculateZoom() {
-        float zoomLevel = Mouse.getDWheel() * 0.1f;
-        distanceFromEntity -= zoomLevel;
-    }
-
-
 
     private void increasePosition(float dx, float dy, float dz) {
         this.followedPoint.x += dx;
@@ -92,19 +85,6 @@ public class MovingCamera extends Camera {
         this.rotX += dx;
         this.rotY += dy;
         this.rotZ += dz;
-    }
-
-   
-    private void movePosition() {
-        float dy = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
-        float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-        float dx = (float) (WSdistance * Math.sin(Math.toRadians(rotY)));
-        float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotY)));
-        float ADdistance = currentSideSpeed * DisplayManager.getFrameTimeSeconds();
-        float dx2 = (float) (ADdistance * Math.sin(Math.toRadians(rotY + 90)));
-        float dz2 = (float) (ADdistance * Math.cos(Math.toRadians(rotY + 90)));
-
-        this.increasePosition(dx + dx2, dy, dz + dz2);
     }
 
     private void checkInputs() {
