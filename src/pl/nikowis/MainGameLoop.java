@@ -45,8 +45,8 @@ public class MainGameLoop {
         Loader loader = new Loader();
 
         //###############################   MODELS  ##########################
-        FullModel sphereModel = new FullModel(loader.loadToVAO(new StaticModel.Sphere()), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
-        FullModel iglooModel = new FullModel(loader.loadToVAO(new StaticModel.Igloo()), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.22f, 0.2f, 0.9f));
+        FullModel sphereModel = new FullModel(OBJLoader.loadObjModel("sphere", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.82f, 0.82f));
+        FullModel iglooModel = new FullModel(OBJLoader.loadObjModel("igloo", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.22f, 0.2f, 0.9f));
         FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.12f, 0.1f));
         FullModel boxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
         RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
@@ -58,13 +58,13 @@ public class MainGameLoop {
         Light light = new Light(new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.1f, 0.9f), atenuation);
         light.setConeAngle(20);
         light.setConeDirection(new Vector3f(0.2f, 0.2f, 1f));
-        Entity sphereEntity = new Entity(sphereModel, new Vector3f(0, 0, 500), 0, 0, 0, 200);
+        Entity sphereEntity = new Entity(sphereModel, new Vector3f(-130, 0, 480), 0, 0, 0, 200);
         Entity satelliteEntity = new Entity(satelliteModel, new Vector3f(0, 80, 300), 0, 50, 50, 30, light);
         Light light2 = new Light(new Vector3f(0, 0, 0), new Vector3f(0.1f, 0.8f, 0.1f), atenuation);
         light2.setConeAngle(20);
         light2.setConeDirection(new Vector3f(0.7f, 0.2f, 1f));
         Entity satelliteEntity2 = new Entity(satelliteModel, new Vector3f(-100, 100, 300), 0, 90, 50, 30, light2);
-        Entity iglooEntity = new Entity(iglooModel, new Vector3f(-77, 103, 370), -30, 300, 50, 30);
+        Entity iglooEntity = new Entity(iglooModel, new Vector3f(-77, 103, 370), -50, 300, 50, 30);
         Entity boxEntity = new Entity(boxModel, new Vector3f(100, 80, 300), 0, 50, 50, 10);
         Entity treeEntity = new Entity(treeModel, new Vector3f(100, 30, 240), 0, 50, 50, 10);
         entities.add(sphereEntity);
@@ -92,7 +92,7 @@ public class MainGameLoop {
         staticCamera.setYaw(1300);
         MovingCamera movingCamera = new MovingCamera(new Vector3f(100, 150, 0));
         movingCamera.setPitch(10);
-        CameraManager cameraManager = new CameraManager(staticCamera, movingCamera);
+        CameraManager cameraManager = new CameraManager(movingCamera, staticCamera);
         //####################################################################
 
         MasterRenderer masterRenderer = new MasterRenderer();

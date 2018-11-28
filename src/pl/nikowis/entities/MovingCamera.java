@@ -1,7 +1,6 @@
 package pl.nikowis.entities;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.renderEngine.DisplayManager;
 
@@ -35,7 +34,7 @@ public class MovingCamera extends Camera {
     public void move() {
         checkInputs();
         float dy = currentUpDownSpeed * DisplayManager.getFrameTimeSeconds();
-        float dy2 =  (currentSpeed * DisplayManager.getFrameTimeSeconds()) * (float)Math.sin(Math.toRadians(pitch + 180));
+        float dy2 = (currentSpeed * DisplayManager.getFrameTimeSeconds()) * (float) Math.sin(Math.toRadians(pitch + 180));
         float WSdistance = currentSpeed * DisplayManager.getFrameTimeSeconds();
         float dx = (float) (WSdistance * Math.sin(Math.toRadians(rotY)));
         float dz = (float) (WSdistance * Math.cos(Math.toRadians(rotY)));
@@ -51,6 +50,7 @@ public class MovingCamera extends Camera {
         float adjustedPitchSpeed = currentPitchSpeed * DisplayManager.getFrameTimeSeconds();
         pitch += adjustedPitchSpeed;
         rotZ++;
+        System.out.println(String.format("(X=%.1f,  Z=%.1f, Y=%.1f)", this.position.x, this.position.z, this.position.y));
     }
 
     private void increasePosition(float dx, float dy, float dz) {
