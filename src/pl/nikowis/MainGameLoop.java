@@ -95,7 +95,7 @@ public class MainGameLoop {
         CameraManager cameraManager = new CameraManager(movingCamera, staticCamera);
         //####################################################################
 
-        MasterRenderer masterRenderer = new MasterRenderer();
+        MasterRenderer masterRenderer = new MasterRenderer(loader);
         //masterRenderer.processTerrain(terrain);
         for (Entity entity : entities) {
             masterRenderer.processEntity(entity);

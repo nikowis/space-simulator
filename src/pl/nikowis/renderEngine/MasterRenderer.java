@@ -28,7 +28,7 @@ public class MasterRenderer {
     /**
      * Controls rendering mode ( naked or textured ).
      */
-    private boolean nakedMode = true;
+    private boolean nakedMode = false;
 
     private Matrix4f projectionMatrix;
 
@@ -42,13 +42,16 @@ public class MasterRenderer {
     private Map<FullModel, List<Entity>> entities = new HashMap<>();
     private List<Terrain> terrains = new ArrayList<>();
 
-    public MasterRenderer() {
+    private SkyboxRenderer skyboxRenderer;
+
+    public MasterRenderer(Loader loader) {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
         createProjectionMatrix();
         entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         nakedRenderer = new NakedRenderer(nakedShader, projectionMatrix);
+        skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
     }
 
     /**
@@ -70,6 +73,7 @@ public class MasterRenderer {
             terrainShader.loadViewMatrix(camera);
             terrainRenderer.render(terrains);
             terrainShader.stop();
+            skyboxRenderer.render(camera);
         } else {
             nakedRenderer.getShader().start();
             nakedRenderer.getShader().loadLights(lights);
