@@ -11,7 +11,7 @@ public class Config {
     /**
      * Field of view ( view width )
      */
-    public static final float FOV = 70;
+    public static final float FOV = 100;
 
     /**
      * Near plane rendering distance.
