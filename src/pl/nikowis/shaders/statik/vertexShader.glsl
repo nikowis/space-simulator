@@ -16,12 +16,15 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[lightsCount];
 
+uniform float numberOfRows;
+uniform vec2 offset;
+
 void main(void){
 
    vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
 
    gl_Position = projectionMatrix * viewMatrix * worldPosition;
-   pass_textureCoords = textureCoords;
+   pass_textureCoords = (textureCoords/numberOfRows) + offset;
 
    surfaceNormal = (transformationMatrix * vec4(normal,0.0)).xyz;
    for(int i=0; i<lightsCount; i++) {

@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL32;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.entities.Camera;
 import pl.nikowis.entities.Light;
@@ -42,6 +43,8 @@ public abstract class ShaderProgram {
     protected int location_coneDirection[];
     protected int location_shineDamper;
     protected int location_reflectivity;
+    protected int location_numberOfRows;
+    protected int location_offset;
 
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
@@ -91,6 +94,10 @@ public abstract class ShaderProgram {
         location_attenuation = new int[MAX_LIGHTS];
         location_coneAngle = new int[MAX_LIGHTS];
         location_coneDirection = new int[MAX_LIGHTS];
+
+        location_numberOfRows = getUniformLocation("numberOfRows");
+        location_offset = getUniformLocation("offset");
+
         for (int i = 0; i < MAX_LIGHTS; i++) {
             location_lightPosition[i] = getUniformLocation("lightPosition[" + i + "]");
             location_lightColour[i] = getUniformLocation("lightColour[" + i + "]");
@@ -146,6 +153,10 @@ public abstract class ShaderProgram {
 
     protected void loadVector(int location, Vector3f vector3f) {
         GL20.glUniform3f(location, vector3f.x, vector3f.y, vector3f.z);
+    }
+
+    protected void loadVector(int location, Vector2f vector2f) {
+        GL20.glUniform2f(location, vector2f.x, vector2f.y);
     }
 
     protected void loadBoolean(int location, boolean value) {
@@ -205,6 +216,14 @@ public abstract class ShaderProgram {
     public void loadShineVariables(float damper, float reflectivity) {
         loadFloat(location_shineDamper, damper);
         loadFloat(location_reflectivity, reflectivity);
+    }
+
+    public void loadNumberOfRows(int numberOfRows) {
+        loadFloat(location_numberOfRows, numberOfRows);
+    }
+
+    public void loadOffset(float x, float y) {
+        loadVector(location_offset, new Vector2f(x, y));
     }
 
     /**

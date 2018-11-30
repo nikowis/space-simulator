@@ -43,7 +43,7 @@ public class EntityRenderer {
      */
     public void render(Map<FullModel, List<Entity>> entities) {
         for(FullModel model : entities.keySet()) {
-            prepareTexutredModel(model);
+            prepareTexturedModel(model);
             List<Entity> batch = entities.get(model);
             for(Entity entity : batch) {
                 prepareInstance(entity);
@@ -53,7 +53,7 @@ public class EntityRenderer {
         }
     }
 
-    private void prepareTexutredModel(FullModel model) {
+    private void prepareTexturedModel(FullModel model) {
         RawModel rawModel = model.getRawModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -61,6 +61,7 @@ public class EntityRenderer {
         GL20.glEnableVertexAttribArray(2);
 
         ModelTexture texture = model.getTexture();
+        shader.loadNumberOfRows(texture.getNumberOfRows());
         shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
@@ -78,6 +79,7 @@ public class EntityRenderer {
                 entity.getPosition(), entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale()
         );
         shader.loadTransformationMatrix(transformationMatrix);
+        shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
     }
 
 }

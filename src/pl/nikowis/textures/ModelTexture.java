@@ -8,6 +8,8 @@ public class ModelTexture {
     private float shineDamper = 1;
     private float reflectivity = 0;
 
+    private int numberOfRows = 1;
+
     public ModelTexture(int id) {
         this.textureId = id;
     }
@@ -39,5 +41,13 @@ public class ModelTexture {
      */
     public void setReflectivity(float reflectivity) {
         this.reflectivity = reflectivity;
+    }
+
+    public int getNumberOfRows() {
+        return numberOfRows;
+    }
+
+    public void setNumberOfRows(int numberOfRows) {
+        this.numberOfRows = numberOfRows;
     }
 }
