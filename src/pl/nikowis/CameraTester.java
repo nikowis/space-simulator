@@ -41,14 +41,14 @@ public class CameraTester {
 
         //###############################   MODELS  ##########################
         FullModel staticBoxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
-        FullModel staticSphereModel = new FullModel(OBJLoader.loadObjModel("sphere", loader), null, new Vector3f(0.82f, 0.82f, 0.82f));
+        //FullModel staticSphereModel = new FullModel(OBJLoader.loadObjModel("sphere", loader), null, new Vector3f(0.82f, 0.82f, 0.82f));
         //####################################################################
 
         //###############################   ENTITIES  ########################
         List<Entity> entities = new ArrayList<>();
         MovingEntity boxEntity = new MovingEntity(staticBoxModel, new Vector3f(696, 3, 183), 0, 33, 0, 3);
         entities.add(boxEntity);
-        entities.add(new Entity(staticSphereModel, new Vector3f(696, 3, 183), 0, 33, 0, 3));
+        //entities.add(new Entity(staticSphereModel, new Vector3f(696, 3, 183), 0, 33, 0, 3));
         List<Light> lights = new ArrayList<>();
         Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
         lights.add(sunLight);
