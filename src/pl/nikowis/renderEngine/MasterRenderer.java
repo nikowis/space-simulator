@@ -156,4 +156,8 @@ public class MasterRenderer {
             }
         }
     }
+
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
+    }
 }

@@ -1,14 +1,18 @@
 package pl.nikowis;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import pl.nikowis.entities.Camera;
 import pl.nikowis.entities.CameraManager;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingCamera;
 import pl.nikowis.entities.StaticCamera;
 import pl.nikowis.renderEngine.GuiRenderer;
+import pl.nikowis.shaders.particles.Particle;
+import pl.nikowis.shaders.particles.ParticleMaster;
 import pl.nikowis.textures.GuiTexture;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.models.RawModel;
@@ -88,6 +92,7 @@ public class MainGameLoop {
         //####################################################################
 
         MasterRenderer masterRenderer = new MasterRenderer(loader);
+        ParticleMaster.init(loader, masterRenderer.getProjectionMatrix());
         GuiRenderer guiRenderer = new GuiRenderer(loader);
 
 
@@ -98,12 +103,23 @@ public class MainGameLoop {
         while (!Display.isCloseRequested()) {
             cameraManager.checkInput();
             cameraManager.moveCurrentCamera();
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
+                new Particle(new Vector3f(0, 220, 500), new Vector3f(0, 150, 0), 10, 4, 0, 1);
+            }
+
+            ParticleMaster.update();
+
             masterRenderer.checkInput();
-            masterRenderer.render(lights, cameraManager.getCurrentCamera());
+            Camera camera = cameraManager.getCurrentCamera();
+            masterRenderer.render(lights, camera);
+            ParticleMaster.renderParticles(camera);
+
             guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }
 
+        ParticleMaster.cleanUp();
         masterRenderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
