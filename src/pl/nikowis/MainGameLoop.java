@@ -1,23 +1,22 @@
 package pl.nikowis;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.entities.CameraManager;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingCamera;
 import pl.nikowis.entities.StaticCamera;
+import pl.nikowis.renderEngine.GuiRenderer;
+import pl.nikowis.textures.GuiTexture;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.models.RawModel;
-import pl.nikowis.models.StaticModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
 import pl.nikowis.renderEngine.MasterRenderer;
 import pl.nikowis.renderEngine.OBJLoader;
-import pl.nikowis.terrains.Terrain;
 import pl.nikowis.textures.ModelTexture;
-import pl.nikowis.textures.TerrainTexture;
-import pl.nikowis.textures.TerrainTexturePack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +27,6 @@ import java.util.List;
  */
 public class MainGameLoop {
 
-    private static final Vector3f[] SUN_COLORS = new Vector3f[]{
-            new Vector3f(0.4f, 0, 0),
-            new Vector3f(0, 0.4f, 0),
-            new Vector3f(0, 0, 0.4f),
-            new Vector3f(0.4f, 0.4f, 0.4f),
-    };
     private static float atBaseFact = 1;
     private static float atDistFact = 0f;
     private static float atDistSquareFact = 0.0001f;
@@ -49,8 +42,13 @@ public class MainGameLoop {
         FullModel iglooModel = new FullModel(OBJLoader.loadObjModel("igloo", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.22f, 0.2f, 0.9f));
         FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.12f, 0.1f));
         FullModel boxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
-        RawModel rawTreeModel = OBJLoader.loadObjModel("tree", loader);
-        FullModel treeModel = new FullModel(rawTreeModel, new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
+        FullModel treeModel = new FullModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
+        //####################################################################
+
+        //###############################   GUIS  ##########################
+        List<GuiTexture> guis = new ArrayList<>();
+        GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+        guis.add(gui);
         //####################################################################
 
         //###############################   ENTITIES  ########################
@@ -73,18 +71,8 @@ public class MainGameLoop {
         entities.add(iglooEntity);
         entities.add(boxEntity);
         entities.add(treeEntity);
-        Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.4f, 0.4f, 0.4f));
+        Light sunLight = new Light(new Vector3f(800, 10000, 800), new Vector3f(0.8f, 0.8f, 0.8f));
         List<Light> lights = setupLights(entities, sunLight);
-        //####################################################################
-
-        //###############################   TERRAIN  #########################
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grass"));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("grassFlowers"));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("rock"));
-        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
-        Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap, new Vector3f(0.8f, 0.8f, 0.8f));
         //####################################################################
 
         //###############################   CAMERAS  #########################
@@ -96,23 +84,19 @@ public class MainGameLoop {
         //####################################################################
 
         MasterRenderer masterRenderer = new MasterRenderer(loader);
-        //masterRenderer.processTerrain(terrain);
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
+
+
         for (Entity entity : entities) {
             masterRenderer.processEntity(entity);
         }
 
-        int i = 0;
-        int j = 0;
         while (!Display.isCloseRequested()) {
-            i++;
-            if (i % 150 == 0) {
-                j++;
-                sunLight.setColour(SUN_COLORS[j % SUN_COLORS.length]);
-            }
             cameraManager.checkInput();
             cameraManager.moveCurrentCamera();
             masterRenderer.checkInput();
             masterRenderer.render(lights, cameraManager.getCurrentCamera());
+            guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }
 
