@@ -13,9 +13,9 @@ import pl.nikowis.entities.StaticCamera;
 import pl.nikowis.renderEngine.GuiRenderer;
 import pl.nikowis.shaders.particles.Particle;
 import pl.nikowis.shaders.particles.ParticleMaster;
+import pl.nikowis.shaders.particles.ParticleGenerator;
 import pl.nikowis.textures.GuiTexture;
 import pl.nikowis.models.FullModel;
-import pl.nikowis.models.RawModel;
 import pl.nikowis.renderEngine.DisplayManager;
 import pl.nikowis.renderEngine.Loader;
 import pl.nikowis.renderEngine.MasterRenderer;
@@ -94,6 +94,7 @@ public class MainGameLoop {
         MasterRenderer masterRenderer = new MasterRenderer(loader);
         ParticleMaster.init(loader, masterRenderer.getProjectionMatrix());
         GuiRenderer guiRenderer = new GuiRenderer(loader);
+        ParticleGenerator particleGenerator = new ParticleGenerator(14, 25, 1, 4);
 
 
         for (Entity entity : entities) {
@@ -104,10 +105,7 @@ public class MainGameLoop {
             cameraManager.checkInput();
             cameraManager.moveCurrentCamera();
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_Y)) {
-                new Particle(new Vector3f(0, 220, 500), new Vector3f(0, 150, 0), 10, 4, 0, 1);
-            }
-
+            particleGenerator.generateParticles(new Vector3f(0, 250, 500));
             ParticleMaster.update();
 
             masterRenderer.checkInput();
