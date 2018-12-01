@@ -12,6 +12,7 @@ import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.shaders.naked.NakedShader;
+import pl.nikowis.shaders.particles.ParticleMaster;
 import pl.nikowis.shaders.statik.StaticShader;
 import pl.nikowis.shaders.terrain.TerrainShader;
 import pl.nikowis.terrains.Terrain;
@@ -196,6 +197,7 @@ public class MasterRenderer {
             entityRenderer.render(otherEntities);
             staticShader.stop();
             skyboxRenderer.render(camera);
+            ParticleMaster.renderParticles(camera);
         } else {
             nakedRenderer.getShader().start();
             nakedRenderer.getShader().loadViewMatrix(camera);
