@@ -14,6 +14,7 @@ public class ScreenShader extends ShaderProgram {
 	private int location_modelMatrix;
 	private int location_viewMatrix;
 	private int location_projectionMatrix;
+	private int location_reflectionTexture;
 
 	public ScreenShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -29,6 +30,11 @@ public class ScreenShader extends ShaderProgram {
 		location_projectionMatrix = getUniformLocation("projectionMatrix");
 		location_viewMatrix = getUniformLocation("viewMatrix");
 		location_modelMatrix = getUniformLocation("modelMatrix");
+		location_reflectionTexture = getUniformLocation("reflectionTexture");
+	}
+
+	public void connectTextureUnits() {
+		super.loadInt(location_reflectionTexture, 0);
 	}
 
 	public void loadProjectionMatrix(Matrix4f projection) {

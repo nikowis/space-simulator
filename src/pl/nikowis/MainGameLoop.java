@@ -113,14 +113,13 @@ public class MainGameLoop {
         asteroidsBeltGenerator.generateAsteroids(new Vector3f(0, -300, 400), 50);
 
         //###############################   SCREEN  #########################
-        ScreenShader screenShader = new ScreenShader();
-        ScreenRenderer screenRenderer = new ScreenRenderer(loader, screenShader, masterRenderer.getProjectionMatrix());
-        List<ScreenTile> screens = new ArrayList<>();
-        screens.add(new ScreenTile(-187, 28, 535, 0, 0, 90, 40));
-
         ScreenFrameBuffers fbos = new ScreenFrameBuffers();
+        ScreenShader screenShader = new ScreenShader();
+        ScreenRenderer screenRenderer = new ScreenRenderer(loader, screenShader, masterRenderer.getProjectionMatrix(), fbos);
+        List<ScreenTile> screens = new ArrayList<>();
+        screens.add(new ScreenTile(-187, 28, 535, -90, 0, 90, 40));
 
-        GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, -0.5f), new Vector2f(0.5f, 0.5f));
+        GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, -0.5f), new Vector2f(0.25f, 0.25f));
         guis.add(gui2);
         //####################################################################
 
