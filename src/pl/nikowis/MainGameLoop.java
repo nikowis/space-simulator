@@ -96,8 +96,8 @@ public class MainGameLoop {
         ParticleMaster.init(loader, masterRenderer.getProjectionMatrix());
         GuiRenderer guiRenderer = new GuiRenderer(loader);
 
-        ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleStar"), 1);
-        ParticleGenerator particleGenerator = new ParticleGenerator(particleTexture, 14, 25, 1, 4);
+        ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("fire"), 4);
+        ParticleGenerator particleGenerator = new ParticleGenerator(particleTexture, 14, 25, 1, 2);
 
 
         for (Entity entity : entities) {
