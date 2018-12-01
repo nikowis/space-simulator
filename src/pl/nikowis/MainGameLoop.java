@@ -1,6 +1,5 @@
 package pl.nikowis;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -11,7 +10,7 @@ import pl.nikowis.entities.Light;
 import pl.nikowis.entities.MovingCamera;
 import pl.nikowis.entities.StaticCamera;
 import pl.nikowis.renderEngine.GuiRenderer;
-import pl.nikowis.shaders.particles.Particle;
+import pl.nikowis.shaders.particles.AsteroidsBeltGenerator;
 import pl.nikowis.shaders.particles.ParticleMaster;
 import pl.nikowis.shaders.particles.ParticleGenerator;
 import pl.nikowis.shaders.particles.ParticleTexture;
@@ -96,9 +95,11 @@ public class MainGameLoop {
         ParticleMaster.init(loader, masterRenderer.getProjectionMatrix());
         GuiRenderer guiRenderer = new GuiRenderer(loader);
 
+        ParticleTexture starTexture = new ParticleTexture(loader.loadTexture("asteroid"), 1);
         ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("fire"), 4);
         ParticleGenerator particleGenerator = new ParticleGenerator(particleTexture, 14, 25, 1, 2);
-
+        AsteroidsBeltGenerator asteroidsBeltGenerator = new AsteroidsBeltGenerator(starTexture);
+        asteroidsBeltGenerator.generateAsteroids(new Vector3f(0, -300, 400), 50);
 
         for (Entity entity : entities) {
             masterRenderer.processEntity(entity);
