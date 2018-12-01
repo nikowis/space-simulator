@@ -3,6 +3,7 @@ package pl.nikowis.shaders.particles;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import pl.nikowis.entities.Camera;
 import pl.nikowis.renderEngine.DisplayManager;
 
 public class Particle {
@@ -23,6 +24,8 @@ public class Particle {
     private Vector2f texOffset2 = new Vector2f();
 
     private float blend;
+
+    private float distance;
 
     public Particle(ParticleTexture texture, Vector3f position, Vector3f velocity, float gravityEffect, float lifeLength, float rotation, float scale) {
         this.texture = texture;
@@ -47,11 +50,12 @@ public class Particle {
         return rotation;
     }
 
-    protected boolean update() {
+    protected boolean update(Camera camera) {
         velocity.y += GRAVITY * gravityEffect * DisplayManager.getFrameTimeSeconds();
         Vector3f change = new Vector3f(velocity);
         change.scale(DisplayManager.getFrameTimeSeconds());
         Vector3f.add(change, position, position);
+        distance = Vector3f.sub(camera.getPosition(), position, null).lengthSquared();
         updateTextureCoordInfo();
         elapsedTime += DisplayManager.getFrameTimeSeconds();
 
@@ -94,5 +98,9 @@ public class Particle {
 
     public float getBlend() {
         return blend;
+    }
+
+    public float getDistance() {
+        return distance;
     }
 }

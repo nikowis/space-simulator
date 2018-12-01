@@ -109,7 +109,7 @@ public class MainGameLoop {
             cameraManager.moveCurrentCamera();
 
             particleGenerator.generateParticles(new Vector3f(0, 250, 500));
-            ParticleMaster.update();
+            ParticleMaster.update(cameraManager.getCurrentCamera());
 
             masterRenderer.checkInput();
             Camera camera = cameraManager.getCurrentCamera();
