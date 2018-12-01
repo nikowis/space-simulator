@@ -47,6 +47,7 @@ public class MainGameLoop {
         FullModel satelliteModel = new FullModel(OBJLoader.loadObjModel("satellite", loader), new ModelTexture(loader.loadTexture("rock")), new Vector3f(0.82f, 0.12f, 0.1f));
         FullModel boxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
         FullModel treeModel = new FullModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
+        FullModel teaModel = new FullModel(OBJLoader.loadObjModel("tea", loader), new ModelTexture(loader.loadTexture("tea")), new Vector3f(0.3f, 1f, 0.3f));
         //####################################################################
 
         //###############################   GUIS  ##########################
@@ -71,6 +72,8 @@ public class MainGameLoop {
         Entity treeEntity = new Entity(treeModel, new Vector3f(0, 170, 400), 0, 0, 0, 20);
         Entity treeEntity2 = new Entity(treeModel, new Vector3f(70, 170, 410), 0, 0, 0, 20);
         Entity treeEntity3 = new Entity(treeModel, new Vector3f(-30, 200, 450), 0, 0, 0, 20);
+        Entity teaEntity = new Entity(teaModel, new Vector3f(70, 220, 530), 0, 0, 0, 2);
+        entities.add(teaEntity);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
         entities.add(satelliteEntity2);
