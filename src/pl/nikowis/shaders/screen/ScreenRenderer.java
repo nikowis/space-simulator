@@ -27,10 +27,10 @@ public class ScreenRenderer {
 
 	public void render(List<ScreenTile> screens, Camera camera) {
 		prepareRender(camera);	
-		for (ScreenTile tile : screens) {
+		for (ScreenTile screen : screens) {
 			Matrix4f modelMatrix = Maths.createTransformationMatrix(
-					new Vector3f(tile.getX(), tile.getHeight(), tile.getZ()), 0, 0, 0,
-					ScreenTile.TILE_SIZE);
+					new Vector3f(screen.getX(), screen.getY(), screen.getZ()), screen.getRotX(), screen.getRotY(), screen.getRotZ(),
+					screen.getSize());
 			shader.loadModelMatrix(modelMatrix);
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, quad.getVertexCount());
 		}

@@ -116,7 +116,7 @@ public class MainGameLoop {
         ScreenShader screenShader = new ScreenShader();
         ScreenRenderer screenRenderer = new ScreenRenderer(loader, screenShader, masterRenderer.getProjectionMatrix());
         List<ScreenTile> screens = new ArrayList<>();
-        screens.add(new ScreenTile(10, 300, 100));
+        screens.add(new ScreenTile(-187, 28, 535, 0, 0, 90, 40));
 
         ScreenFrameBuffers fbos = new ScreenFrameBuffers();
 

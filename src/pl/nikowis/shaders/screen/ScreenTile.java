@@ -2,30 +2,48 @@ package pl.nikowis.shaders.screen;
 
 
 public class ScreenTile {
-	
-	public static final float TILE_SIZE = 60;
-	
-	private float height;
-	private float x,z;
-	
-	public ScreenTile(float centerX, float centerZ, float height){
-		this.x = centerX;
-		this.z = centerZ;
-		this.height = height;
-	}
 
-	public float getHeight() {
-		return height;
-	}
+    private float x, z, y;
+    private float rotX, rotY, rotZ;
+    private float size;
 
-	public float getX() {
-		return x;
-	}
+    public ScreenTile(float x, float y, float z , float rotX, float rotY, float rotZ, float size) {
+        this.x = x;
+        this.z = z;
+        this.y = y;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
+        this.size = size;
+    }
 
-	public float getZ() {
-		return z;
-	}
+    public float getX() {
+        return x;
+    }
 
+    public float getZ() {
+        return z;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getRotX() {
+        return rotX;
+    }
+
+    public float getRotY() {
+        return rotY;
+    }
+
+    public float getRotZ() {
+        return rotZ;
+    }
+
+    public float getSize() {
+        return size;
+    }
 
 
 }
