@@ -1,5 +1,6 @@
 package pl.nikowis.renderEngine;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -25,15 +26,18 @@ public class EntityRenderer {
 
     private StaticShader shader;
     private EnvironmentMapTexture environmentMap;
+    private StaticEnvMapTexture staticEnvMapTexture;
+    private boolean staticEnvMap;
 
     /**
      * Constructor.
      * @param shader static shader
      * @param projectionMatrix projection matrix
      */
-    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix, EnvironmentMapTexture environmentMap) {
+    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix, StaticEnvMapTexture staticEnvMapTexture, EnvironmentMapTexture environmentMap) {
         this.shader = shader;
         this.environmentMap = environmentMap;
+        this.staticEnvMapTexture = staticEnvMapTexture;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.connectTextureUnits();
@@ -45,6 +49,7 @@ public class EntityRenderer {
      * @param entities map of textured models and entities.
      */
     public void render(Map<FullModel, List<Entity>> entities) {
+        checkInput();
         for(FullModel model : entities.keySet()) {
             prepareTexturedModel(model);
             List<Entity> batch = entities.get(model);
@@ -88,7 +93,23 @@ public class EntityRenderer {
 
     private void bindEnvironmentMap(){
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, environmentMap.textureId);
+        if(staticEnvMap) {
+            GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, staticEnvMapTexture.getTexture());
+        } else {
+            GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, environmentMap.textureId);
+        }
+    }
+
+    public void checkInput() {
+        if (Keyboard.isKeyDown(Keyboard.KEY_3)) {
+            if (!staticEnvMap) {
+                staticEnvMap = true;
+            }
+        } else if (Keyboard.isKeyDown(Keyboard.KEY_4)) {
+            if (staticEnvMap) {
+                staticEnvMap = false;
+            }
+        }
     }
 
 }

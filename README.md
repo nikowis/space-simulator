@@ -16,24 +16,18 @@ Car movement using arrow keys.
 #### Key bidings to change game settings :
  * N - turn off the textures
  * M - turn on the textures
- * 1 - Static camera
- * 2 - Third person camera
- * 3 - Turning camera
- 
-#### Shading models (turn off the textures first)
- * F - Flat shading
- * G - Gouraud shading
- * H - Phong shading
- 
-#### Reflection models (turn off the textures first)
- * I - Turn off reflections
- * O - Blinn–Phong reflection model
- * P - Phong reflection model
+ * 1 - Moving camera
+ * 2 - Static camera
+ * GRAVE/ESCAPE - toggle sample GUI
+ * 3/4 - toggle environment mapping technique
+ *
 
-#### Mouse movements while using third person camera
- * Scroll up + down for camera distance
- * Left mouse button + move left/right - left/right camera movement
- * Right mouse button + move up/down - up/down camera movement
+### Camera movements
+ * AWSD - moving
+ * Arrows - turning
+ * LSHIFT/SPACE - move along Y axis
+
+
 
 ### Used technologies :
 * Java 8

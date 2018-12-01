@@ -51,13 +51,15 @@ public class MasterRenderer {
     private SkyboxRenderer skyboxRenderer;
 
     private EnvironmentMapTexture environmentMap;
+    private StaticEnvMapTexture staticEnvMapTexture;
 
     public MasterRenderer(Loader loader) {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
         createProjectionMatrix();
+        staticEnvMapTexture = new StaticEnvMapTexture(ENVIRO_MAP_INSIDE, loader);
         environmentMap = EnvironmentMapTexture.newEmptyCubeMap(128, loader);
-        entityRenderer = new EntityRenderer(staticShader, projectionMatrix, environmentMap);
+        entityRenderer = new EntityRenderer(staticShader, projectionMatrix, staticEnvMapTexture, environmentMap);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         nakedRenderer = new NakedRenderer(nakedShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
@@ -186,7 +188,7 @@ public class MasterRenderer {
                     newList.add(entity);
                 }
             });
-            if(!newList.isEmpty()) {
+            if (!newList.isEmpty()) {
                 otherEntities.put(key, newList);
             }
         }
