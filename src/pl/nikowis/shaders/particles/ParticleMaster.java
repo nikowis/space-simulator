@@ -5,15 +5,17 @@ import pl.nikowis.entities.Camera;
 import pl.nikowis.renderEngine.Loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nikodem on 11/30/2018.
  */
 public class ParticleMaster {
 
-    private static List<Particle> particles = new ArrayList<>();
+    private static Map<ParticleTexture, List<Particle>> particles = new HashMap<>();
     private static ParticleRenderer renderer;
 
     public static void init(Loader loader, Matrix4f projectionMatrix) {
@@ -21,12 +23,19 @@ public class ParticleMaster {
     }
 
     public static void update() {
-        Iterator<Particle> iterator = particles.iterator();
-        while (iterator.hasNext()) {
-            Particle p = iterator.next();
-            boolean stillAlive = p.update();
-            if(!stillAlive) {
-                iterator.remove();
+        Iterator<Map.Entry<ParticleTexture, List<Particle>>> mapIterator = particles.entrySet().iterator();
+        while(mapIterator.hasNext()){
+            List<Particle> list = mapIterator.next().getValue();
+            Iterator<Particle> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                Particle p = iterator.next();
+                boolean stillAlive = p.update();
+                if(!stillAlive) {
+                    iterator.remove();
+                    if(list.isEmpty()) {
+                        mapIterator.remove();
+                    }
+                }
             }
         }
     }
@@ -40,6 +49,11 @@ public class ParticleMaster {
     }
 
     public static void addParticle(Particle particle) {
-        particles.add(particle);
+        List<Particle> list = particles.get(particle.getTexture());
+        if(list == null) {
+            list = new ArrayList<>();
+            particles.put(particle.getTexture(), list);
+        }
+        list.add(particle);
     }
 }

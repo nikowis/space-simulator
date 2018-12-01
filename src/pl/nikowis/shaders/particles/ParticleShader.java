@@ -6,8 +6,8 @@ import pl.nikowis.shaders.ShaderProgram;
 
 public class ParticleShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "/pl/nikowis/shaders/particles/particleVShader.txt";
-	private static final String FRAGMENT_FILE = "/pl/nikowis/shaders/particles/particleFShader.txt";
+	private static final String VERTEX_FILE = "/pl/nikowis/shaders/particles/particleVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "/pl/nikowis/shaders/particles/particleFragmentShader.glsl";
 
 	private int location_modelViewMatrix;
 	private int location_projectionMatrix;

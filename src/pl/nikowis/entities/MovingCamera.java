@@ -50,7 +50,7 @@ public class MovingCamera extends Camera {
         float adjustedPitchSpeed = currentPitchSpeed * DisplayManager.getFrameTimeSeconds();
         pitch += adjustedPitchSpeed;
         rotZ++;
-        System.out.println(String.format("(X=%.1f,  Z=%.1f, Y=%.1f)", this.position.x, this.position.z, this.position.y));
+        //System.out.println(String.format("(X=%.1f,  Z=%.1f, Y=%.1f)", this.position.x, this.position.z, this.position.y));
     }
 
     private void increasePosition(float dx, float dy, float dz) {

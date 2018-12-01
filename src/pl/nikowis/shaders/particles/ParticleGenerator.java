@@ -12,7 +12,10 @@ public class ParticleGenerator {
     private float gravityFactor;
     private float lifeTime;
 
-    public ParticleGenerator(float particlesPerSecond, float speed, float gravityFactor, float lifeTime) {
+    private ParticleTexture particleTexture;
+
+    public ParticleGenerator(ParticleTexture particleTexture, float particlesPerSecond, float speed, float gravityFactor, float lifeTime) {
+        this.particleTexture = particleTexture;
         this.particlesPerSecond = particlesPerSecond;
         this.speed = speed;
         this.gravityFactor = gravityFactor;
@@ -38,7 +41,7 @@ public class ParticleGenerator {
         Vector3f velocity = new Vector3f(dirX, 1, dirZ);
         velocity.normalise();
         velocity.scale(speed);
-        new Particle(new Vector3f(center), velocity, gravityFactor, lifeTime, 0, 1);
+        new Particle(particleTexture, new Vector3f(center), velocity, gravityFactor, lifeTime, 0, 10);
     }
 
 }

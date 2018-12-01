@@ -14,6 +14,7 @@ import pl.nikowis.renderEngine.GuiRenderer;
 import pl.nikowis.shaders.particles.Particle;
 import pl.nikowis.shaders.particles.ParticleMaster;
 import pl.nikowis.shaders.particles.ParticleGenerator;
+import pl.nikowis.shaders.particles.ParticleTexture;
 import pl.nikowis.textures.GuiTexture;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.renderEngine.DisplayManager;
@@ -94,7 +95,9 @@ public class MainGameLoop {
         MasterRenderer masterRenderer = new MasterRenderer(loader);
         ParticleMaster.init(loader, masterRenderer.getProjectionMatrix());
         GuiRenderer guiRenderer = new GuiRenderer(loader);
-        ParticleGenerator particleGenerator = new ParticleGenerator(14, 25, 1, 4);
+
+        ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleStar"), 1);
+        ParticleGenerator particleGenerator = new ParticleGenerator(particleTexture, 14, 25, 1, 4);
 
 
         for (Entity entity : entities) {
