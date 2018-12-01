@@ -10,6 +10,7 @@ import pl.nikowis.models.RawModel;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.shaders.statik.StaticShader;
 import pl.nikowis.textures.ModelTexture;
+import pl.nikowis.textures.EnvironmentMapTexture;
 import pl.nikowis.toolbox.Maths;
 
 import java.util.List;
@@ -23,14 +24,14 @@ import java.util.Map;
 public class EntityRenderer {
 
     private StaticShader shader;
-    private CubeMap environmentMap;
+    private EnvironmentMapTexture environmentMap;
 
     /**
      * Constructor.
      * @param shader static shader
      * @param projectionMatrix projection matrix
      */
-    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix, CubeMap environmentMap) {
+    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix, EnvironmentMapTexture environmentMap) {
         this.shader = shader;
         this.environmentMap = environmentMap;
         shader.start();
@@ -87,7 +88,7 @@ public class EntityRenderer {
 
     private void bindEnvironmentMap(){
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, environmentMap.getTexture());
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, environmentMap.textureId);
     }
 
 }

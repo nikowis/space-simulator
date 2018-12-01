@@ -73,7 +73,8 @@ public class MainGameLoop {
         Entity treeEntity = new Entity(treeModel, new Vector3f(0, 170, 400), 0, 0, 0, 20);
         Entity treeEntity2 = new Entity(treeModel, new Vector3f(70, 170, 410), 0, 0, 0, 20);
         Entity treeEntity3 = new Entity(treeModel, new Vector3f(-30, 200, 450), 0, 0, 0, 20);
-        Entity teaEntity = new Entity(teaModel, new Vector3f(70, 220, 530), 0, 0, 0, 2);
+        Vector3f teapotPosition = new Vector3f(70, 300, 530);
+        Entity teaEntity = new Entity(teaModel, teapotPosition, 0, 0, 0, 10);
         entities.add(teaEntity);
         entities.add(sphereEntity);
         entities.add(satelliteEntity);
@@ -115,9 +116,12 @@ public class MainGameLoop {
 
             particleGenerator.generateParticles(new Vector3f(0, 250, 500));
             ParticleMaster.update(cameraManager.getCurrentCamera());
-
+            masterRenderer.updateEnvironmentMap(teapotPosition);
             masterRenderer.checkInput();
             Camera camera = cameraManager.getCurrentCamera();
+
+
+
             masterRenderer.render(lights, camera);
             ParticleMaster.renderParticles(camera);
 

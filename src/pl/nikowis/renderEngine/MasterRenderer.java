@@ -4,8 +4,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 import pl.nikowis.config.Config;
 import pl.nikowis.entities.Camera;
+import pl.nikowis.entities.CubeMapCamera;
 import pl.nikowis.entities.Entity;
 import pl.nikowis.entities.Light;
 import pl.nikowis.models.FullModel;
@@ -13,6 +15,7 @@ import pl.nikowis.shaders.naked.NakedShader;
 import pl.nikowis.shaders.statik.StaticShader;
 import pl.nikowis.shaders.terrain.TerrainShader;
 import pl.nikowis.terrains.Terrain;
+import pl.nikowis.textures.EnvironmentMapTexture;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,12 +49,14 @@ public class MasterRenderer {
 
     private SkyboxRenderer skyboxRenderer;
 
+    private EnvironmentMapTexture environmentMap;
+
     public MasterRenderer(Loader loader) {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
         createProjectionMatrix();
-        CubeMap enviroMap = new CubeMap(ENVIRO_MAP_INSIDE, loader);
-        entityRenderer = new EntityRenderer(staticShader, projectionMatrix, enviroMap);
+        environmentMap = EnvironmentMapTexture.newEmptyCubeMap(128, loader);
+        entityRenderer = new EntityRenderer(staticShader, projectionMatrix, environmentMap);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         nakedRenderer = new NakedRenderer(nakedShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
@@ -120,13 +125,14 @@ public class MasterRenderer {
         staticShader.cleanUp();
         terrainShader.cleanUp();
         nakedShader.cleanUp();
+        environmentMap.delete();
     }
 
 
     private void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glClearColor(Config.BCKGRND.x,Config.BCKGRND.y,Config.BCKGRND.z, 1);
+        GL11.glClearColor(Config.BCKGRND.x, Config.BCKGRND.y, Config.BCKGRND.z, 1);
     }
 
     private void createProjectionMatrix() {
@@ -162,5 +168,39 @@ public class MasterRenderer {
 
     public Matrix4f getProjectionMatrix() {
         return projectionMatrix;
+    }
+
+    public void updateEnvironmentMap(Vector3f position) {
+        EnvironmentMapRenderer.renderEnvironmentMap(environmentMap, position, this);
+    }
+
+    public void renderEnvironmentMap(CubeMapCamera camera) {
+        prepare();
+        Map<FullModel, List<Entity>> otherEntities = new HashMap<>();
+        for (FullModel key : entities.keySet()) {
+            List<Entity> newList = new ArrayList<>();
+            List<Entity> list = entities.get(key);
+            list.stream().forEach(entity -> {
+                if (key.getCubeMapReflection() == 0) {
+                    newList.add(entity);
+                }
+            });
+            if(!newList.isEmpty()) {
+                otherEntities.put(key, newList);
+            }
+        }
+
+        if (!nakedMode) {
+            staticShader.start();
+            staticShader.loadViewMatrix(camera);
+            entityRenderer.render(otherEntities);
+            staticShader.stop();
+            skyboxRenderer.render(camera);
+        } else {
+            nakedRenderer.getShader().start();
+            nakedRenderer.getShader().loadViewMatrix(camera);
+            nakedRenderer.render(otherEntities);
+            nakedRenderer.getShader().stop();
+        }
     }
 }

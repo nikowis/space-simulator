@@ -7,19 +7,19 @@ import pl.nikowis.renderEngine.Loader;
 /**
  * Created by Nikodem on 12/1/2018.
  */
-public class Texture {
+public class EnvironmentMapTexture {
 
     public final int textureId;
     public final int size;
     private final int type;
 
-    protected Texture(int textureId, int size) {
+    protected EnvironmentMapTexture(int textureId, int size) {
         this.textureId = textureId;
         this.size = size;
         this.type = GL11.GL_TEXTURE_2D;
     }
 
-    protected Texture(int textureId, int type, int size) {
+    protected EnvironmentMapTexture(int textureId, int type, int size) {
         this.textureId = textureId;
         this.size = size;
         this.type = type;
@@ -38,15 +38,14 @@ public class Texture {
         return new TextureBuilder(textureFile);
     }
 
-    public static Texture newCubeMap(String[] textureFiles, Loader loader) {
+    public static EnvironmentMapTexture newCubeMap(String[] textureFiles, Loader loader) {
         int cubeMapId = loader.loadCubeMap(textureFiles);
-        //TODO needs to know size!
-        return new Texture(cubeMapId, GL13.GL_TEXTURE_CUBE_MAP, 0);
+        return new EnvironmentMapTexture(cubeMapId, GL13.GL_TEXTURE_CUBE_MAP, 0);
     }
 
-    public static Texture newEmptyCubeMap(int size, Loader loader) {
+    public static EnvironmentMapTexture newEmptyCubeMap(int size, Loader loader) {
         int cubeMapId = loader.createEmptyCubeMap(size);
-        return new Texture(cubeMapId, GL13.GL_TEXTURE_CUBE_MAP, size);
+        return new EnvironmentMapTexture(cubeMapId, GL13.GL_TEXTURE_CUBE_MAP, size);
     }
 
 }

@@ -18,10 +18,10 @@ public class TextureBuilder {
         this.filePath = filePath;
     }
 
-    public Texture create(){
+    public EnvironmentMapTexture create(){
         TextureData textureData = Loader.decodeTextureFile(filePath);
         int textureId = Loader.loadTextureToOpenGL(textureData, this);
-        return new Texture(textureId, textureData.getWidth());
+        return new EnvironmentMapTexture(textureId, textureData.getWidth());
     }
 
     public TextureBuilder clampEdges(){
