@@ -2,16 +2,20 @@ package pl.nikowis.renderEngine;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import pl.nikowis.models.RawModel;
 import pl.nikowis.models.StaticModel;
+import pl.nikowis.textures.TextureBuilder;
 import pl.nikowis.textures.TextureData;
 
 import java.io.FileInputStream;
@@ -158,6 +162,7 @@ public class Loader {
         int texId = GL11.glGenTextures();
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texId);
+        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 
         for (int i = 0; i < textureFiles.length; i++) {
             TextureData data = decodeTextureFile("res/" + textureFiles[i] + ".png");
@@ -166,11 +171,32 @@ public class Loader {
 
         GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, 0);
         textures.add(texId);
         return texId;
     }
 
-    private TextureData decodeTextureFile(String filename) {
+
+    public int createEmptyCubeMap(int size) {
+        int texID = GL11.glGenTextures();
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
+        for (int i = 0; i < 6; i++) {
+            GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA8, size, size, 0, GL11.GL_RGBA,
+                    GL11.GL_UNSIGNED_BYTE, (ByteBuffer)null);
+        }
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL12.GL_TEXTURE_WRAP_R, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, 0);
+        textures.add(texID);
+        return texID;
+    }
+
+    public static TextureData decodeTextureFile(String filename) {
         int width = 0;
         int height = 0;
         ByteBuffer buffer = null;
@@ -189,5 +215,39 @@ public class Loader {
             System.exit(-1);
         }
         return new TextureData(buffer, width, height);
+    }
+
+    public static int loadTextureToOpenGL(TextureData data, TextureBuilder builder) {
+        int texID = GL11.glGenTextures();
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID);
+        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL12.GL_BGRA,
+                GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+        if (builder.isMipmap()) {
+            GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+            if (builder.isAnisotropic() && GLContext.getCapabilities().GL_EXT_texture_filter_anisotropic) {
+                GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0);
+                GL11.glTexParameterf(GL11.GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT,
+                        4.0f);
+            }
+        } else if (builder.isNearest()) {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        } else {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        }
+        if (builder.isClampEdges()) {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        } else {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+        }
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        return texID;
     }
 }
