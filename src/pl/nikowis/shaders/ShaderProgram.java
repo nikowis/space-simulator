@@ -45,6 +45,9 @@ public abstract class ShaderProgram {
     protected int location_reflectivity;
     protected int location_numberOfRows;
     protected int location_offset;
+    protected int location_environMap;
+    private int location_cameraPosition;
+    protected int location_cubeMapReflection;
 
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
@@ -88,6 +91,9 @@ public abstract class ShaderProgram {
         location_viewMatrix = getUniformLocation("viewMatrix");
         location_shineDamper = getUniformLocation("shineDamper");
         location_reflectivity = getUniformLocation("reflectivty");
+        location_cubeMapReflection = getUniformLocation("cubeMapReflection");
+
+        location_cameraPosition = getUniformLocation("cameraPosition");
 
         location_lightPosition = new int[MAX_LIGHTS];
         location_lightColour = new int[MAX_LIGHTS];
@@ -97,6 +103,8 @@ public abstract class ShaderProgram {
 
         location_numberOfRows = getUniformLocation("numberOfRows");
         location_offset = getUniformLocation("offset");
+
+        location_environMap = getUniformLocation("environMap");
 
         for (int i = 0; i < MAX_LIGHTS; i++) {
             location_lightPosition[i] = getUniformLocation("lightPosition[" + i + "]");
@@ -211,11 +219,13 @@ public abstract class ShaderProgram {
     public void loadViewMatrix(Camera camera) {
         Matrix4f viewMatrix = Maths.createViewMatrix(camera);
         loadMatrix(location_viewMatrix, viewMatrix);
+        loadVector(location_cameraPosition, camera.getPosition());
     }
 
-    public void loadShineVariables(float damper, float reflectivity) {
+    public void loadShineVariables(float damper, float reflectivity, float cubeMapReflection) {
         loadFloat(location_shineDamper, damper);
         loadFloat(location_reflectivity, reflectivity);
+        loadFloat(location_cubeMapReflection, cubeMapReflection);
     }
 
     public void loadNumberOfRows(int numberOfRows) {
@@ -249,5 +259,9 @@ public abstract class ShaderProgram {
                 loadVector(location_coneDirection[i], zeros);
             }
         }
+    }
+
+    public void connectTextureUnits() {
+        loadInt(location_environMap, 1);
     }
 }

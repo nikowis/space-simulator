@@ -25,6 +25,8 @@ import java.util.Map;
  */
 public class MasterRenderer {
 
+    private static final String[] ENVIRO_MAP_INSIDE = {"right", "left", "top", "bottom", "back", "front"};
+
     /**
      * Controls rendering mode ( naked or textured ).
      */
@@ -48,7 +50,8 @@ public class MasterRenderer {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
         createProjectionMatrix();
-        entityRenderer = new EntityRenderer(staticShader, projectionMatrix);
+        CubeMap enviroMap = new CubeMap(ENVIRO_MAP_INSIDE, loader);
+        entityRenderer = new EntityRenderer(staticShader, projectionMatrix, enviroMap);
         terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
         nakedRenderer = new NakedRenderer(nakedShader, projectionMatrix);
         skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);

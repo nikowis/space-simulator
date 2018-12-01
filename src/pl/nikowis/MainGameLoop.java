@@ -48,6 +48,7 @@ public class MainGameLoop {
         FullModel boxModel = new FullModel(OBJLoader.loadObjModel("box", loader), new ModelTexture(loader.loadTexture("box")), new Vector3f(0.62f, 0.32f, 0.176f));
         FullModel treeModel = new FullModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")), new Vector3f(0.3f, 1f, 0.3f));
         FullModel teaModel = new FullModel(OBJLoader.loadObjModel("tea", loader), new ModelTexture(loader.loadTexture("tea")), new Vector3f(0.3f, 1f, 0.3f));
+        teaModel.setCubeMapReflection(0.9f);
         //####################################################################
 
         //###############################   GUIS  ##########################

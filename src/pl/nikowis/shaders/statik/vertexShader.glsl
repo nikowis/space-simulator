@@ -10,11 +10,13 @@ out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
 out vec3 toLightVector[lightsCount];
 out vec3 toCameraVector;
+out vec3 reflectedVector;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[lightsCount];
+uniform vec3 cameraPosition;
 
 uniform float numberOfRows;
 uniform vec2 offset;
@@ -32,4 +34,8 @@ void main(void){
    }
 
    toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
+
+   vec3 unitNormal = normalize(normal);
+   vec3 viewVector = normalize(worldPosition.xyz - cameraPosition);
+   reflectedVector = reflect(viewVector, unitNormal);
 }

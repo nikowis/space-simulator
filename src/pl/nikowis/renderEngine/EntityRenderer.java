@@ -23,17 +23,19 @@ import java.util.Map;
 public class EntityRenderer {
 
     private StaticShader shader;
+    private CubeMap environmentMap;
 
     /**
      * Constructor.
      * @param shader static shader
      * @param projectionMatrix projection matrix
      */
-    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix, CubeMap environmentMap) {
         this.shader = shader;
-
+        this.environmentMap = environmentMap;
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
+        shader.connectTextureUnits();
         shader.stop();
     }
 
@@ -45,6 +47,7 @@ public class EntityRenderer {
         for(FullModel model : entities.keySet()) {
             prepareTexturedModel(model);
             List<Entity> batch = entities.get(model);
+            bindEnvironmentMap();
             for(Entity entity : batch) {
                 prepareInstance(entity);
                 GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
@@ -62,7 +65,7 @@ public class EntityRenderer {
 
         ModelTexture texture = model.getTexture();
         shader.loadNumberOfRows(texture.getNumberOfRows());
-        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
+        shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity(), model.getCubeMapReflection());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getID());
     }
@@ -80,6 +83,11 @@ public class EntityRenderer {
         );
         shader.loadTransformationMatrix(transformationMatrix);
         shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset());
+    }
+
+    private void bindEnvironmentMap(){
+        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, environmentMap.getTexture());
     }
 
 }

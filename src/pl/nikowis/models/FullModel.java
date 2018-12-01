@@ -14,6 +14,7 @@ public class FullModel {
     private float shineDamper = 100;
     private float reflectivity = 1;
     private Vector3f defaultColour;
+    private float cubeMapReflection;
 
     /**
      * Constructor.
@@ -53,5 +54,13 @@ public class FullModel {
 
     public void setReflectivity(float reflectivity) {
         this.reflectivity = reflectivity;
+    }
+
+    public float getCubeMapReflection() {
+        return cubeMapReflection;
+    }
+
+    public void setCubeMapReflection(float cubeMapReflection) {
+        this.cubeMapReflection = cubeMapReflection;
     }
 }

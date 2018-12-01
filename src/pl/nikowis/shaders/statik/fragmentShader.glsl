@@ -6,6 +6,7 @@ in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector[lightsCount];
 in vec3 toCameraVector;
+in vec3 reflectedVector;
 
 out vec4 out_Color;
 
@@ -14,6 +15,9 @@ uniform vec3 lightColour[lightsCount];
 uniform vec3 attenuation[lightsCount];
 uniform float shineDamper;
 uniform float reflectivty;
+uniform float cubeMapReflection;
+
+uniform samplerCube environMap;
 
 void main(void){
 
@@ -42,4 +46,7 @@ void main(void){
     totalDiffuse = max(totalDiffuse, 0.2);
 
     out_Color = vec4(totalDiffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(totalSpecular, 1.0);
+
+    vec4 reflectedColour = texture(environMap, reflectedVector);
+    out_Color = mix(out_Color, reflectedColour, cubeMapReflection);
 }
