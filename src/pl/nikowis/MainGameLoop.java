@@ -14,6 +14,10 @@ import pl.nikowis.shaders.particles.AsteroidsBeltGenerator;
 import pl.nikowis.shaders.particles.ParticleMaster;
 import pl.nikowis.shaders.particles.ParticleGenerator;
 import pl.nikowis.shaders.particles.ParticleTexture;
+import pl.nikowis.shaders.screen.ScreenFrameBuffers;
+import pl.nikowis.shaders.screen.ScreenRenderer;
+import pl.nikowis.shaders.screen.ScreenShader;
+import pl.nikowis.shaders.screen.ScreenTile;
 import pl.nikowis.textures.GuiTexture;
 import pl.nikowis.models.FullModel;
 import pl.nikowis.renderEngine.DisplayManager;
@@ -88,8 +92,10 @@ public class MainGameLoop {
         List<Light> lights = setupLights(entities, sunLight);
         //####################################################################
 
+
+
         //###############################   CAMERAS  #########################
-        StaticCamera staticCamera = new StaticCamera(new Vector3f(300, 200, 0), 10);
+        StaticCamera staticCamera = new StaticCamera(new Vector3f(300, 200, 100), 10);
         staticCamera.setYaw(1300);
         MovingCamera movingCamera = new MovingCamera(new Vector3f(100, 150, 0));
         movingCamera.setPitch(10);
@@ -106,6 +112,18 @@ public class MainGameLoop {
         AsteroidsBeltGenerator asteroidsBeltGenerator = new AsteroidsBeltGenerator(starTexture);
         asteroidsBeltGenerator.generateAsteroids(new Vector3f(0, -300, 400), 50);
 
+        //###############################   SCREEN  #########################
+        ScreenShader screenShader = new ScreenShader();
+        ScreenRenderer screenRenderer = new ScreenRenderer(loader, screenShader, masterRenderer.getProjectionMatrix());
+        List<ScreenTile> screens = new ArrayList<>();
+        screens.add(new ScreenTile(10, 300, 100));
+
+        ScreenFrameBuffers fbos = new ScreenFrameBuffers();
+
+        GuiTexture gui2 = new GuiTexture(fbos.getReflectionTexture(), new Vector2f(-0.5f, -0.5f), new Vector2f(0.5f, 0.5f));
+        guis.add(gui2);
+        //####################################################################
+
         for (Entity entity : entities) {
             masterRenderer.processEntity(entity);
         }
@@ -119,14 +137,21 @@ public class MainGameLoop {
             masterRenderer.updateEnvironmentMap(teapotPosition);
             masterRenderer.checkInput();
             Camera camera = cameraManager.getCurrentCamera();
-            
+
+            fbos.bindReflectionFrameBuffer();
+            masterRenderer.render(lights, staticCamera);
+            ParticleMaster.renderParticles(staticCamera);
+            fbos.unbindCurrentFrameBuffer();
+
             masterRenderer.render(lights, camera);
             ParticleMaster.renderParticles(camera);
+            screenRenderer.render(screens, camera);
 
             guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }
 
+        fbos.cleanUp();
         ParticleMaster.cleanUp();
         masterRenderer.cleanUp();
         loader.cleanUp();
